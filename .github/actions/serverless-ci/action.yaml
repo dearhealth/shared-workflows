@@ -5,10 +5,12 @@ inputs:
   code-artifact-account:
     required: true
     default: us-east-1
+    description: "Runs poetry install and runs the pytest"
   code-artifact-domain:
     required: true
   role-to-assume:
     required: true
+    description: "Runs poetry install and runs the pytest"
 
 runs:
   using: "composite"
@@ -31,6 +33,7 @@ runs:
     - run: |
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{code-artifact-domain}} --domain-owner ${{code-artifact-account}} --query authorizationToken --output text)
         poetry config http-basic.dh_pypi aws "${CODEARTIFACT_AUTH_TOKEN}"
+      shell: bash
     - uses: actions/cache@v2
       with:
         path: |
