@@ -1,0 +1,47 @@
+name: "run-serverless-ci"
+description: "Runs poetry install and runs the pytest"
+name: "Deploy Frontend to S3"
+description: "Builds and deploys the React frontend to AWS S3"
+inputs:
+   code-artifact-account
+     default: us-east-1
+   code-artifact-domain:
+     required: true
+   
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v2
+ 
+  - name: date
+    id: date
+    uses: Kaven-Universe/github-action-current-date-time@v1.1.0
+    with:
+      format: "YYYY_MM_DD"
+  - uses: Gr1N/setup-poetry@v7
+   - run:  |
+                export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{code-artifcat-domain}} --domain-owner ${{code-artifcat-account}} --query authorizationToken --output text)
+                poetry config http-basic.dh_pypi aws "${CODEARTIFACT_AUTH_TOKEN}"
+      - uses: actions/cache@v2
+        with:
+          path: |
+            poetry.lock
+            .venv
+          key: ${{ steps.date.outputs.time }}-${{hashFiles('pyprotect.toml')}}
+      -  uses: actions/cache@v2
+         with:
+          path: |
+            ~/cache
+          key: depcache
+    - uses: actions/cache@v2
+      with:
+        path: |
+          poetry.lock
+          .venv
+        key: ${{ steps.date.outputs.time }}-${{hashFiles('pyprotect.toml')}}
+    -  uses: actions/cache@v2
+       with:
+        path: |
+          ~/cache
+        key: depcache
