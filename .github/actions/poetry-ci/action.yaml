@@ -1,7 +1,6 @@
 name: "run-serverless-ci"
 description: "Runs poetry install and runs the pytest"
-name: "Deploy Frontend to S3"
-description: "Builds and deploys the React frontend to AWS S3"
+
 inputs:
    code-artifact-account:
      required: true
