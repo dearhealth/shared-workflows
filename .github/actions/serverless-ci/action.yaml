@@ -49,21 +49,30 @@ runs:
     - uses: actions/setup-python@v1
       with:
         python-version: 3.8
-    - run: poetry install
-    - run: npm install
-    - run: npm install -g serverless
     
+    - run: poetry install
+      shell: bash
+    - run: npm install
+      shell: bash
+    - run: npm install -g serverless
+      shell: bash
     - run: mkdir dh-packages
+      shell: bash
     - run: sls package --stage dev --region us-east-1 --package dh-packages/dev-us-build
-          
+      shell: bash     
     - run: sls package --stage tst --region us-east-1 --package dh-packages/tst-us-build
-          
+      shell: bash
     - run: sls package --stage acc --region us-east-1 --package dh-packages/acc-us-build
+      shell: bash
     - run: sls package --stage prd --region us-east-1 --package dh-packages/prd-us-build 
+      shell: bash
     - run: sls package --stage acc --region eu-west-1 --package dh-packages/acc-eu-build
+      shell: bash
     - run: sls package --stage prd --region eu-west-1 --package dh-packages/prd-eu-build
+      shell: bash
 
     - run: tar cf packages.tar dh-packages
+      shell: bash
     # - run : aws s3 sync . s3://dh-package-repo-eu-west-1
 
     - uses: actions/packages
