@@ -78,7 +78,7 @@ runs:
       shell: bash
     # - run : aws s3 sync . s3://dh-package-repo-eu-west-1
 
-    - uses: actions/packages
+    - uses: actions/upload-artifact@v2
       with:
         name: packages-artifact
         path: packages.tar
