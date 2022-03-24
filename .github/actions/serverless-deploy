@@ -1,0 +1,39 @@
+name: "run-serverless-ci"
+description: "Runs poetry install and runs the pytest"
+
+inputs:
+  env:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+    description: "Runs poetry install and runs the pytest"
+
+runs:
+  using: "composite"
+  steps:
+  
+   - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{inputs.role-to-assume}}
+          aws-region: ${{inputs.region}}
+    
+ 
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: packages
+      - run: tar xf packages.tar
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'    
+          cache: 'npm'
+      - run: npm install
+      - run: npm install -g serverless
+      - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --package packages/${{inputs.env}}-${{inputs.region}}-build
+
+
+    
+
