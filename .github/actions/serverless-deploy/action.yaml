@@ -23,6 +23,7 @@ runs:
      with:
       name: packages-artifact
    - run: tar xf packages.tar
+     shel: bash
    - uses: actions/setup-node@v2
      with:
         node-version: '14'    
