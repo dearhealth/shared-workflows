@@ -74,7 +74,7 @@ runs:
     - run: sls package --stage prd --region eu-west-1 --package dh-packages/prd-eu-west-1-build
       shell: bash
 
-    - run: tar cf --exclude=**/requirements/* packages.tar dh-packages
+    - run: tar cf  packages.tar dh-packages --exclude=**/requirements/*
       shell: bash
     # - run : aws s3 sync . s3://dh-package-repo-eu-west-1
 
