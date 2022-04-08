@@ -57,8 +57,8 @@ jobs:
       id-token: write
       contents: read
     runs-on: 'ubuntu-latest'
-    environment: 'dev'
-    needs: ci
+    environment: 'tst'
+    needs: deploy-dev
     steps: 
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
       
