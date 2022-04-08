@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
-      - uses: .github/actions/serverless-ci@main
+      - uses: ./.github/actions/serverless-ci@main
         with:
          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
          code-artifact-domain: dh-artifacts
@@ -45,7 +45,7 @@ jobs:
     environment: 'dev'
     needs: ci
     steps: 
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+       - uses: ./.github/actions/serverless-deploy@main
       
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
@@ -60,7 +60,7 @@ jobs:
     environment: 'dev'
     needs: ci
     steps: 
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+       - uses: ./.github/actions/serverless-deploy@main
       
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
