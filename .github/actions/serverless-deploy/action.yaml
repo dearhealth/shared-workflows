@@ -28,7 +28,7 @@ runs:
       name: packages-artifact
    - run: pwd
      shell: bash
-   - run: tar xvf packages.tar -C /home/runner/work/service-recommender/service-recommender
+   - run: tar xvf packages.tar
      shell: bash
    - uses: actions/setup-node@v2
      with:

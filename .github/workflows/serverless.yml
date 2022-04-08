@@ -86,4 +86,4 @@ jobs:
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
            region: us-east-1
-           env: ${{ secrets.AWS_ACCOUNT_TST }}
+           env: tst
