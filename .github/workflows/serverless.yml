@@ -36,7 +36,6 @@ jobs:
          code-artifact-account: ${{ secrets.AWS_ACCOUNT_DEV }}
          
         
-  
   deploy-dev:
     permissions:
       id-token: write
@@ -45,33 +44,11 @@ jobs:
     environment: 'dev'
     needs: ci
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
-    - name: Start DynamoDB in GitHub Actions
-      uses: rrainn/dynamodb-action@v2.0.1
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
-          aws-region: us-east-1
-    - name: Download a single artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: packages-artifact
-    - run: pwd
-      shell: bash
-    - run: tar xvf packages.tar -C /home/runner/work/service-recommender/service-recommender
-      shell: bash
-    - uses: actions/setup-node@v2
-      with:
-          node-version: '14'    
-          cache: 'npm'
-    - run: npm install
-      shell: bash
-    - run: npm install -g serverless@2
-      shell: bash
-    - run: sls deploy --stage dev --region us-east-1 --package dh-packages/dev-us-east-1-build
-      shell: bash
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
+           region: us-east-1
+           env: dev
 
   deploy-tst:
     permissions:
@@ -80,9 +57,8 @@ jobs:
     runs-on: 'ubuntu-latest'
     environment: 'tst'
     needs: deploy-dev
-    steps: 
+    steps:
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
-      
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
            region: us-east-1
