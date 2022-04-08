@@ -52,6 +52,7 @@ jobs:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
            region: us-east-1
            env: dev
+           old-env-id: develop
            aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-tst:
@@ -67,6 +68,7 @@ jobs:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
            region: us-east-1
            env: tst
+           old-env-id: test
            aws-account-id: ${{ secrets.AWS_ACCOUNT_TST }}
 
   # deploy-acc-eu:
@@ -82,6 +84,7 @@ jobs:
   #          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ACC }}
   #          region: eu-west-1
   #          env: acc
+  #          old-env-id: acceptance
   #          aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
 
   deploy-acc-us:
@@ -97,6 +100,7 @@ jobs:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ACC }}
            region: us-east-1
            env: acc
+           old-env-id: acceptance
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
  
   # deploy-prd-eu:
@@ -112,6 +116,7 @@ jobs:
   #          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
   #          region: eu-west-1
   #          env: prd
+  #          old-env-id: production
   #          aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
 
   # deploy-prd-us:
@@ -127,4 +132,5 @@ jobs:
   #          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
   #          region: us-east-1
   #          env: prd
+  #          old-env-id: production
   #          aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
