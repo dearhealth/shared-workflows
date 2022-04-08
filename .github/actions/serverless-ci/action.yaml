@@ -31,6 +31,8 @@ runs:
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
       with:
         format: "YYYY_MM_DD"
+    - name: Start DynamoDB in GitHub Actions
+      uses: rrainn/dynamodb-action@v2.0.1
     - uses: Gr1N/setup-poetry@v7
 
     - name: Configure AWS credentials from Test account
@@ -60,7 +62,6 @@ runs:
     - uses: actions/setup-python@v1
       with:
         python-version: 3.8
-    
     - run: poetry install
       shell: bash
     - name: Run tests

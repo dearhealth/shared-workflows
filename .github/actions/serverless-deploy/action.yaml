@@ -17,8 +17,6 @@ runs:
   steps:
    - name: checkout
      uses: actions/checkout@v2
-   - name: Start DynamoDB in GitHub Actions
-     uses: rrainn/dynamodb-action@v2.0.1
    - name: Configure AWS credentials
      uses: aws-actions/configure-aws-credentials@v1
      with:
