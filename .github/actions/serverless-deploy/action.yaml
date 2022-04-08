@@ -9,6 +9,8 @@ inputs:
   role-to-assume:
     required: true
     description: "Runs poetry install and runs the pytest"
+  aws-account-id:
+    required: true
 
 runs:
   using: "composite"
@@ -36,5 +38,5 @@ runs:
      shell: bash
    - run: npm install -g serverless@2
      shell: bash
-   - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
+   - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --deployment-bucket-name dh-deployment-bucket-${{inputs.aws-account-id}} --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
      shell: bash
