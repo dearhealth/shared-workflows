@@ -1,0 +1,68 @@
+name: Serverless CI/CD workflow
+
+on:
+  workflow_call:
+    secrets:
+      DEPLOYMENT_ROLE_DEV:
+        required: true
+      DEPLOYMENT_ROLE_TST:
+        required: true
+      DEPLOYMENT_ROLE_ACC:
+        required: true
+      DEPLOYMENT_ROLE_PRD:
+        required: true
+      AWS_ACCOUNT_DEV:
+        required: true
+      AWS_ACCOUNT_TST:
+        required: true
+      AWS_ACCOUNT_ACC:
+        required: true
+      AWS_ACCOUNT_PRD:
+        required: true
+jobs:
+  ci:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: .github/actions/serverless-ci@main
+        with:
+         role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
+         code-artifact-domain: dh-artifacts
+         code-artifact-account: ${{ secrets.AWS_ACCOUNT_DEV }}
+         
+        
+  
+  deploy-dev:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: 'ubuntu-latest'
+    environment: 'dev'
+    needs: ci
+    steps: 
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+      
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
+           region: us-east-1
+           env: ${{ secrets.AWS_ACCOUNT_DEV }}
+
+  deploy-tst:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: 'ubuntu-latest'
+    environment: 'dev'
+    needs: ci
+    steps: 
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+      
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
+           region: us-east-1
+           env: ${{ secrets.AWS_ACCOUNT_TST }}

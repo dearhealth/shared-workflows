@@ -55,6 +55,8 @@ runs:
     
     - run: poetry install
       shell: bash
+    - name: Run tests
+      run: poetry run pytest
     - run: npm install
       shell: bash
     - run: npm install -g serverless
