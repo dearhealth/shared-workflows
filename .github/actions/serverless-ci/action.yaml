@@ -73,17 +73,17 @@ runs:
       shell: bash
     - run: mkdir dh-packages
       shell: bash
-    - run: sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-dev}} --package dh-packages/dev-us-east-1-build
+    - run: sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/dev-us-east-1-build
       shell: bash     
-    - run: sls package --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-tst}} --package dh-packages/tst-us-east-1-build
+    - run: sls package --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-tst}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/tst-us-east-1-build
       shell: bash
-    - run: sls package --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --package dh-packages/acc-us-east-1-build
+    - run: sls package --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/acc-us-east-1-build
       shell: bash
-    - run: sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --package dh-packages/prd-us-east-1-build 
+    - run: sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/prd-us-east-1-build 
       shell: bash
-    - run: sls package --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --package dh-packages/acc-eu-west-1-build
+    - run: sls package --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/acc-eu-west-1-build
       shell: bash
-    - run: sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --package dh-packages/prd-eu-west-1-build
+    - run: sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-dev}} --package dh-packages/prd-eu-west-1-build
       shell: bash
 
     - run: tar cf  packages.tar --exclude=**/requirements/* dh-packages 
