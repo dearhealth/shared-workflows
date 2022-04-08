@@ -70,7 +70,7 @@ jobs:
       shell: bash
     - run: npm install -g serverless@2
       shell: bash
-    - run: sls deploy --stage dev --region us-east-1 --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
+    - run: sls deploy --stage dev --region us-east-1 --package dh-packages/dev-us-east-1-build
       shell: bash
 
   deploy-tst:
