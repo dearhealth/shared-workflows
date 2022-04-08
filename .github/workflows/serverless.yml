@@ -58,7 +58,9 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: packages-artifact
-    - run: tar xvf packages.tar
+    - run: pwd
+      shell: bash
+    - run: tar xvf packages.tar -C /home/runner/work/service-recommender/service-recommender
       shell: bash
     - uses: actions/setup-node@v2
       with:
