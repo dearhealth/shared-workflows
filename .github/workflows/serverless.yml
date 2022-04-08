@@ -34,8 +34,11 @@ jobs:
          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
          code-artifact-domain: dh-artifacts
          code-artifact-account: ${{ secrets.AWS_ACCOUNT_DEV }}
-         
-        
+         aws-account-dev: ${{ secerts.AWS_ACCOUNT_DEV }}
+         aws-account-tst: ${{ secrets.AWS_ACCOUNT_TST }}
+         aws-account-acc: ${{ secrets.AWS_ACCOUNT_ACC }}
+         aws-account-prd: ${{ secrets.AWS_ACCOUNT_PRD }}
+
   deploy-dev:
     permissions:
       id-token: write
