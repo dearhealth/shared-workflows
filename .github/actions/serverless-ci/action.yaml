@@ -60,7 +60,7 @@ runs:
       shell: bash
     - run: npm install
       shell: bash
-    - run: npm install -g serverless
+    - run: npm install -g serverless@2
       shell: bash
     - run: mkdir dh-packages
       shell: bash
