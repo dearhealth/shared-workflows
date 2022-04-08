@@ -64,7 +64,7 @@ jobs:
            region: us-east-1
            env: tst
 
-  deploy-tst:
+  deploy-acc-eu:
     permissions:
       id-token: write
       contents: read
@@ -78,7 +78,7 @@ jobs:
            region: eu-west-1
            env: acc
 
-  deploy-tst:
+  deploy-acc-us:
     permissions:
       id-token: write
       contents: read
