@@ -11,6 +11,14 @@ inputs:
   role-to-assume:
     required: true
     description: "Runs poetry install and runs the pytest"
+  aws-account-dev:
+    required: true
+  aws-account-tst:
+    required: true
+  aws-account-acc:
+    required: true
+  aws-account-prd:
+    required: true
 
 runs:
   using: "composite"
@@ -64,17 +72,17 @@ runs:
       shell: bash
     - run: mkdir dh-packages
       shell: bash
-    - run: sls package --stage dev --region us-east-1 --package dh-packages/dev-us-east-1-build
+    - run: sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-dev}} --package dh-packages/dev-us-east-1-build
       shell: bash     
-    - run: sls package --stage tst --region us-east-1 --package dh-packages/tst-us-east-1-build
+    - run: sls package --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-tst}} --package dh-packages/tst-us-east-1-build
       shell: bash
-    - run: sls package --stage acc --region us-east-1 --package dh-packages/acc-us-east-1-build
+    - run: sls package --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --package dh-packages/acc-us-east-1-build
       shell: bash
-    - run: sls package --stage prd --region us-east-1 --package dh-packages/prd-us-east-1-build 
+    - run: sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --package dh-packages/prd-us-east-1-build 
       shell: bash
-    - run: sls package --stage acc --region eu-west-1 --package dh-packages/acc-eu-west-1-build
+    - run: sls package --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-acc}} --package dh-packages/acc-eu-west-1-build
       shell: bash
-    - run: sls package --stage prd --region eu-west-1 --package dh-packages/prd-eu-west-1-build
+    - run: sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --package dh-packages/prd-eu-west-1-build
       shell: bash
 
     - run: tar cf  packages.tar --exclude=**/requirements/* dh-packages 

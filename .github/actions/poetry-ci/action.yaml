@@ -2,11 +2,11 @@ name: "run-serverless-ci"
 description: "Runs poetry install and runs the pytest"
 
 inputs:
-   code-artifact-account:
-     required: true
-     default: us-east-1
-   code-artifact-domain:
-     required: true
+  code-artifact-account:
+    required: true
+    default: us-east-1
+  code-artifact-domain:
+    required: true
    
 runs:
   using: "composite"
