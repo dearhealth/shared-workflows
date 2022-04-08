@@ -1,6 +1,6 @@
 poetry install
 npm install
-npm install -g serverless
+npm install -g serverless@2
     
 mkdir dh-packages
 sls package --stage dev --region us-east-1 --package dh-packages/dev-us-build

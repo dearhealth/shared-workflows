@@ -34,7 +34,7 @@ runs:
         cache: 'npm'
    - run: npm install
      shell: bash
-   - run: npm install -g serverless
+   - run: npm install -g serverless@2
      shell: bash
    - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
      shell: bash
