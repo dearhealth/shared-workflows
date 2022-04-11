@@ -31,6 +31,8 @@ runs:
     with:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
+  - run: npm install
+    shell: bash
   - run: npm run build:${{ inputs.env }}
     shell: bash
   - run: echo "WEB_BUCKET_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}" >> $GITHUB_ENV
