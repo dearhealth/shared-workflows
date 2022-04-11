@@ -43,9 +43,9 @@ runs:
     shell: bash
   - run: echo "STACK_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}" >> $GITHUB_ENV
     shell: bash
-  - run: echo "S3_BUCKET_NAME=$(aws cloudformation list-exports --region $region --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.service-name }}-s3-bucket-name'].Value" --no-paginate --output text)" >> $GITHUB_ENV
+  - run: echo "S3_BUCKET_NAME=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.service-name }}-s3-bucket-name'].Value" --no-paginate --output text)" >> $GITHUB_ENV
     shell: bash
-  - run: echo DISTRIBUTION_ID=$(aws cloudformation list-exports --region $region --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.service-name }}-distribution-id'].Value" --no-paginate --output text) >> $GITHUB_ENV
+  - run: echo DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.service-name }}-distribution-id'].Value" --no-paginate --output text) >> $GITHUB_ENV
     shell: bash
   - run: aws cloudformation deploy --template-file cloudformation/template.yml --stack-name ${{ env.STACK_NAME }} --region ${{ inputs.region }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides EnvId=${{ inputs.env }} Public=${{ inputs.public }} WebBucketName=${{ env.WEB_BUCKET_NAME }}
     shell: bash
