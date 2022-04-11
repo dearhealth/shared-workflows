@@ -16,10 +16,6 @@ inputs:
     required: true
   public:
     required: true
-
-env:
-  WEB_BUCKET_NAME: dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}
-  STACK_NAME: dh-${{ inputs.env }}-${{ inputs.service-name }}
   
 runs:
   using: "composite"
@@ -36,6 +32,10 @@ runs:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
   - run: npm run build:${{ inputs.env }}
+    shell: bash
+  - run: echo "WEB_BUCKET_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}" >> $GITHUB_ENV
+    shell: bash
+  - run: echo "STACK_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}" >> $GITHUB_ENV
     shell: bash
   - run: echo "S3_BUCKET_NAME=$(aws cloudformation list-exports --region $region --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.service-name }}-s3-bucket-name'].Value" --no-paginate --output text)" >> $GITHUB_ENV
     shell: bash
