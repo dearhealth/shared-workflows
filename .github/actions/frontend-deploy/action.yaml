@@ -16,6 +16,10 @@ inputs:
     required: true
   public:
     required: true
+  build-target:
+    required: true
+  build-output-folder:
+    required: true
   
 runs:
   using: "composite"
@@ -33,7 +37,7 @@ runs:
       aws-region: ${{inputs.region}}
   - run: npm install
     shell: bash
-  - run: npm run build:${{ inputs.env }}
+  - run: npm run build:${{ inputs.build-target }}
     shell: bash
   - run: echo "WEB_BUCKET_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}" >> $GITHUB_ENV
     shell: bash
@@ -45,7 +49,7 @@ runs:
     shell: bash
   - run: aws cloudformation deploy --template-file cloudformation/template.yml --stack-name ${{ env.STACK_NAME }} --region ${{ inputs.region }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides EnvId=${{ inputs.env }} Public=${{ inputs.public }} WebBucketName=${{ env.WEB_BUCKET_NAME }}
     shell: bash
-  - run: aws s3 sync build "s3://${{ env.S3_BUCKET_NAME }}"
+  - run: aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}"
     shell: bash
   - run: aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
     shell: bash
