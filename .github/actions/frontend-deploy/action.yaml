@@ -37,7 +37,7 @@ runs:
       aws-region: ${{inputs.region}}
   - run: npm install
     shell: bash
-  - run: npm run ${{ inputs.build-target }}
+  - run: npm run build:${{ inputs.build-target }}
     shell: bash
   - run: echo "WEB_BUCKET_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}" >> $GITHUB_ENV
     shell: bash
