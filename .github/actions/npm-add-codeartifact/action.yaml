@@ -1,0 +1,26 @@
+name: "run-serverless-ci"
+description: "add code-artifact-dependency"
+
+inputs:
+  role-to-assume:
+    required: true
+    description: "Runs poetry install and runs the pytest"
+  code-artifact-account:
+    required: true
+    description: "Runs poetry install and runs the pytest"
+  code-artifact-domain:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+   - name: Configure AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+        role-to-assume: ${{inputs.role-to-assume}}
+        aws-region: us-east-1
+   - run: aws codeartifact login --region us-east-1  --tool npm --repository npm-store --domain ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}}
+     shell: bash
+   - run: npm config set always-auth=true
+     shell: bash
+   

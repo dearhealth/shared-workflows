@@ -4,7 +4,6 @@ description: "Runs poetry install and runs the pytest"
 inputs:
   code-artifact-account:
     required: true
-    default: us-east-1
     description: "Runs poetry install and runs the pytest"
   code-artifact-domain:
     required: true
