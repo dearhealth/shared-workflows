@@ -38,7 +38,5 @@ runs:
      shell: bash
    - run: npm install -g serverless@2
      shell: bash
-   - run: aws sts get-caller-identity --output table
-     shell: bash
    - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --deploymentBucketName dh-deployment-bucket-${{inputs.region}}-${{inputs.aws-account-id}} --aws-target-account-id ${{inputs.aws-account-id}} --old-env-id ${{inputs.old-env-id}} --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
      shell: bash
