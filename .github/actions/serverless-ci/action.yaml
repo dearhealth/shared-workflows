@@ -43,12 +43,12 @@ runs:
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
         poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
       shell: bash
-#     - uses: actions/cache@v2
-#       with:
-#         path: |
+    - uses: actions/cache@v2
+      with:
+        path: |
+          .venv
 #           poetry.lock
-#           .venv
-#         key: ${{ steps.date.outputs.time }}-${{hashFiles('pyprotect.toml')}}
+        key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
     - uses: actions/cache@v2
       with:
         path: |
