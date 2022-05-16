@@ -40,9 +40,9 @@ runs:
     - uses: actions/cache@v2
       with:
         path: |
-          poetry.lock
           .venv
-        key: ${{ steps.date.outputs.time }}-${{hashFiles('pyprotect.toml')}}
+#           poetry.lock
+        key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
     - uses: actions/cache@v2
       with:
         path: |
@@ -66,14 +66,22 @@ runs:
       shell: bash
     - run: mkdir dh-packages
       shell: bash
-    - run: sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --old-env-id develop --package dh-packages/dev-us-east-1-build
-      shell: bash     
-    - run: sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-us-east-1-build 
+    - run: |
+        sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --old-env-id develop --package dh-packages/dev-us-east-1-build
+        du -sh dh-packages/dev-us-east-1-build
       shell: bash
-    - run: sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-eu-west-1-build
+    - run: |
+        sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-us-east-1-build 
+        du -sh dh-packages/prd-us-east-1-build
+      shell: bash
+    - run: |
+        sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-eu-west-1-build
+        du -sh dh-packages/prd-eu-west-1-build
       shell: bash
 
-    - run: tar cf  packages.tar --exclude=**/requirements/* dh-packages 
+    - run: |
+        tar cf packages.tar --exclude=**/requirements/* dh-packages
+        du -sh packages.tar
       shell: bash
     # - run : aws s3 sync . s3://dh-package-repo-eu-west-1
 
@@ -81,4 +89,8 @@ runs:
       with:
         name: packages-artifact
         path: packages.tar
+
+
+    
+
 
