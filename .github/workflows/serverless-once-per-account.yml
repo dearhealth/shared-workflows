@@ -1,0 +1,78 @@
+name: Serverless CI/CD workflow deploying once per AWS account
+
+on:
+  workflow_call:
+    secrets:
+      DEPLOYMENT_ROLE_DEV:
+        required: true
+      DEPLOYMENT_ROLE_PRD:
+        required: true
+      AWS_ACCOUNT_DEV:
+        required: true
+      AWS_ACCOUNT_PRD:
+        required: true
+jobs:
+  ci:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dearhealth/shared-workflows/.github/actions/serverless-ci-once-per-account@main
+        with:
+         role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
+         code-artifact-domain: dh-artifacts
+         code-artifact-account: ${{ secrets.AWS_ACCOUNT_DEV }}
+         aws-account-dev: ${{ secrets.AWS_ACCOUNT_DEV }}
+         aws-account-prd: ${{ secrets.AWS_ACCOUNT_PRD }}
+
+  deploy-dev:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: 'ubuntu-latest'
+    environment: 'dev'
+    needs: ci
+    steps:
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
+           region: us-east-1
+           env: dev
+           old-env-id: develop
+           aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
+
+  deploy-prd-eu:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: 'ubuntu-latest'
+    environment: 'prd-eu'
+    needs: deploy-dev
+    steps:
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
+           region: eu-west-1
+           env: prd
+           old-env-id: production
+           aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+
+  deploy-prd-us:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: 'ubuntu-latest'
+    environment: 'prd-us'
+    needs: deploy-dev
+    steps:
+       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
+         with:
+           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
+           region: us-east-1
+           env: prd
+           old-env-id: production
+           aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}

@@ -4,12 +4,10 @@ description: "Runs poetry install and runs the pytest"
 inputs:
   code-artifact-account:
     required: true
-    description: "Runs poetry install and runs the pytest"
   code-artifact-domain:
     required: true
   role-to-assume:
     required: true
-    description: "Runs poetry install and runs the pytest"
   aws-account-dev:
     required: true
   aws-account-tst:
