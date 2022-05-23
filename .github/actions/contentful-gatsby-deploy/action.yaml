@@ -40,7 +40,7 @@ runs:
       echo "Setting env vars for Cloudormation DATA Stack deployment"
       echo "STACK_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-data-stack" >> $GITHUB_ENV
       echo "WEB_BUCKET_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
-      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids"  >> $GITHUB_ENV
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids" >> $GITHUB_ENV
 
   - shell: bash
     run: |
@@ -51,7 +51,11 @@ runs:
     run: |
       echo "Starting GATSBY build....."
       npm install
+      
+      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
+      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
       npm run build
+
       aws s3 sync public s3://${{ env.WEB_BUCKET_NAME }}
       echo "S3 bucket sync complete..."
       echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
