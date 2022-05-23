@@ -16,7 +16,11 @@ inputs:
     required: true
   cfn-role:
     required: true
-  
+  contentful-space-id:
+    required: true
+  contentful-access-token:
+    required: true
+
 runs:
   using: "composite"
   steps:
