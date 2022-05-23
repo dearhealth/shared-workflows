@@ -36,7 +36,7 @@ runs:
       echo "Starting Cloudormation DATA Stack deployment..."
       echo "STACK_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-data-stack" >> $GITHUB_ENV
       echo "WEB_BUCKET_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
-      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids"
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids"  >> $GITHUB_ENV
       aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} S3CanonicalUserIds=${{ env.S3_CANONICAL_USER_IDS_SSM_PATH }}
 
   - shell: bash
