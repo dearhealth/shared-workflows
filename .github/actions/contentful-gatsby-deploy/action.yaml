@@ -16,12 +16,6 @@ inputs:
     required: true
   cfn-role:
     required: true
-  public:
-    required: true
-  build-target:
-    required: true
-  build-output-folder:
-    required: true
   
 runs:
   using: "composite"
