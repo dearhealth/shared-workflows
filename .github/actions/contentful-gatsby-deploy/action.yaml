@@ -1,0 +1,59 @@
+name: "run-contentful-to-gatsby-deployment"
+description: "Extracts content from Contentful and creates a gatsby Website out of it."
+
+inputs:
+  env:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+  aws-account-id:
+    required: true
+  service-name:
+    required: true
+  myacademy-portal-type:
+    required: true
+  cfn-role:
+    required: true
+  public:
+    required: true
+  build-target:
+    required: true
+  build-output-folder:
+    required: true
+  
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v3
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '16'    
+      cache: 'npm'
+  - name: Configure AWS credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      aws-region: ${{inputs.region}}
+  - shell: bash
+    run: |
+      echo "Starting Cloudormation DATA Stack deployment..."
+      echo "STACK_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-data-stack" >> $GITHUB_ENV
+      echo "WEB_BUCKET_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids"
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} S3CanonicalUserIds=${{ env.S3_CANONICAL_USER_IDS_SSM_PATH }}
+
+  - shell: bash
+    run: |
+      echo "Starting GATSBY build....."
+      npm install
+      npm run build
+      aws s3 sync public s3://${{ env.WEB_BUCKET_NAME }}
+      echo "S3 bucket sync complete..."
+      echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
+
+  - shell: bash
+    run: |
+      echo "Invalidating cloudfront edge cache..."
