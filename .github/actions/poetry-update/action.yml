@@ -1,0 +1,34 @@
+name: "run-serverless-ci"
+description: "Runs poetry install and runs the pytest"
+
+inputs:
+  code-artifact-account:
+    required: true
+    default: us-east-1
+  code-artifact-domain:
+    required: true
+   
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v2
+ 
+  - uses: Gr1N/setup-poetry@v7
+  - run:  |
+                export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{code-artifcat-domain}} --domain-owner ${{code-artifcat-account}} --query authorizationToken --output text)
+                poetry config http-basic.dh_pypi aws "${CODEARTIFACT_AUTH_TOKEN}"
+  - uses: actions/cache@v2
+    with:
+      path: |
+         ~/cache
+      key: depcache
+  - uses: actions/setup-python@v1
+    with:
+        python-version: 3.8
+  - run: poetry install
+    shell: bash
+  
+  - uses: stefanzweifel/git-auto-commit-action@v4
+    with:
+      commit_message: Updated poetry.lock
