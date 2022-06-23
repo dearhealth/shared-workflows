@@ -1,5 +1,5 @@
-name: "run-serverless-ci"
-description: "Runs poetry install and runs the pytest"
+name: "run-frontend-ci"
+description: "Builds and deploys FE project"
 
 inputs:
   env:
@@ -35,6 +35,8 @@ runs:
     with:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
+  - run: aws codeartifact login --tool npm --domain dh-artifacts --domain-owner ${{secrets.AWS_ACCOUNT_DEV}} --repository npm-store
+    shell: bash
   - run: npm install
     shell: bash
   - run: npm run build:${{ inputs.build-target }}
