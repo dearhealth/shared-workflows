@@ -35,7 +35,7 @@ runs:
     with:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
-  - run: aws codeartifact login --tool npm --domain dh-artifacts --domain-owner ${{secrets.AWS_ACCOUNT_DEV}} --repository npm-store
+  - run: aws codeartifact login --tool npm --domain dh-artifacts --domain-owner ${{inputs.code-artifacts-account-id}} --repository npm-store
     shell: bash
   - run: npm install
     shell: bash
