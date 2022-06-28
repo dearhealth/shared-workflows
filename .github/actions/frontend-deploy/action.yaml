@@ -20,6 +20,8 @@ inputs:
     required: true
   build-output-folder:
     required: true
+  code-artifacts-account-id:
+    required: true
   
 runs:
   using: "composite"
