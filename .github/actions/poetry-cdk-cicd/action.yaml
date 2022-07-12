@@ -51,7 +51,7 @@ runs:
       poetry install --no-root
           
       aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifacts-account-id }} --repository npm-store
-      npm i cdk
+      npm i -g cdk
 
       [[ -z "${{ inputs.region }}" ]] && { echo "inputs.region cannot be empty" ; exit 1; }
       echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
