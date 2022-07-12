@@ -44,13 +44,36 @@ runs:
       node-version: 16
 
   - shell: bash
-    run:  |
-          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ inputs.code-artifact-domain }} --domain-owner ${{ inputs.code-artifacts-account-id }} --query authorizationToken --output text)
-          poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
-          poetry install --no-root
+    run: |
+      echo "Performing deployment on region: ${{ inputs.region }}"
+      export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ inputs.code-artifact-domain }} --domain-owner ${{ inputs.code-artifacts-account-id }} --query authorizationToken --output text)
+      poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
+      poetry install --no-root
           
-          aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifacts-account-id }} --repository npm-store
-          npm i cdk
+      aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifacts-account-id }} --repository npm-store
+      npm i cdk
+
+      [[ -z "${{ inputs.region }}" ]] && { echo "inputs.region cannot be empty" ; exit 1; }
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEPLOYMENT REGION: ${{ inputs.region }}"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Bootstrap CDK Toolkit on this environment..."
+      echo
+      echo
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Synthesizing Cloudformation templates..."
+      echo "Running >> cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}"
+      poetry run cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
+      echo
+      echo
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Listing the stacks that will be deployed"
+      poetry run cdk list -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo
+
+      export LOGLEVEL=DEBUG
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment begins..."
+      poetry run cdk deploy '*' --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }} --require-approval never
+
   - uses: actions/cache@v2
     with:
       path: |
@@ -72,26 +95,3 @@ runs:
       path: |
           ~/cache
       key: depcache
-  - shell: bash
-    run: |
-      echo "Performing deployment on region: ${{ inputs.region }}"
-      [[ -z "${{ inputs.region }}" ]] && { echo "inputs.region cannot be empty" ; exit 1; }
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEPLOYMENT REGION: ${{ inputs.region }}"
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Bootstrap CDK Toolkit on this environment..."
-      echo
-      echo
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Synthesizing Cloudformation templates..."
-      echo "Running >> cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}"
-      poetry run cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
-      echo
-      echo
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Listing the stacks that will be deployed"
-      poetry run cdk list -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-      echo
-
-      export LOGLEVEL=DEBUG
-      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment begins..."
-      poetry run cdk deploy '*' --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }} --require-approval never
