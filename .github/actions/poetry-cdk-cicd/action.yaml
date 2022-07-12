@@ -50,7 +50,7 @@ runs:
           poetry install --no-root
           
           aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifacts-account-id }} --repository npm-store
-          npm i
+          npm i cdk
   - uses: actions/cache@v2
     with:
       path: |
