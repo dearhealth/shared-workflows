@@ -36,9 +36,8 @@ runs:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{ inputs.region }}
 
-  - uses: Gr1N/setup-poetry@v7
-
   - name: Setup Poetry
+    uses: Gr1N/setup-poetry@v7
     run:  |
             export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ code-artifact-domain }} --domain-owner ${{ code-artifact-account }} --query authorizationToken --output text)
             poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
