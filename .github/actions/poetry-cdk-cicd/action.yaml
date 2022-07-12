@@ -49,7 +49,7 @@ runs:
           poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
           poetry install --no-root
           
-          aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{inputs.code-artifacts-account}} --repository npm-store
+          aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifact-account }} --repository npm-store
           npm i
   - uses: actions/cache@v2
     with:
