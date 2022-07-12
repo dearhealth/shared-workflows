@@ -38,10 +38,12 @@ runs:
 
   - name: Setup Poetry
     uses: Gr1N/setup-poetry@v7
+  
+  - shell: bash
     run:  |
-            export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ code-artifact-domain }} --domain-owner ${{ code-artifact-account }} --query authorizationToken --output text)
-            poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
-            poetry install --no-root
+          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ code-artifact-domain }} --domain-owner ${{ code-artifact-account }} --query authorizationToken --output text)
+          poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
+          poetry install --no-root
   - uses: actions/cache@v2
     with:
       path: |
