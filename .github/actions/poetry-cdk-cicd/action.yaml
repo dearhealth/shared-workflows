@@ -41,7 +41,7 @@ runs:
   
   - shell: bash
     run:  |
-          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ code-artifact-domain }} --domain-owner ${{ code-artifact-account }} --query authorizationToken --output text)
+          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ inputs.code-artifact-domain }} --domain-owner ${{ inputs.code-artifact-account }} --query authorizationToken --output text)
           poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
           poetry install --no-root
   - uses: actions/cache@v2
