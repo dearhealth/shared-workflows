@@ -2,7 +2,7 @@ name: "run-serverless-ci"
 description: "Runs poetry install and runs the pytest"
 
 inputs:
-  code-artifact-account:
+  code-artifacts-account-id:
     required: true
     default: us-east-1
   code-artifact-domain:
@@ -45,11 +45,11 @@ runs:
 
   - shell: bash
     run:  |
-          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ inputs.code-artifact-domain }} --domain-owner ${{ inputs.code-artifact-account }} --query authorizationToken --output text)
+          export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{ inputs.code-artifact-domain }} --domain-owner ${{ inputs.code-artifacts-account-id }} --query authorizationToken --output text)
           poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
           poetry install --no-root
           
-          aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifact-account }} --repository npm-store
+          aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{ inputs.code-artifacts-account-id }} --repository npm-store
           npm i
   - uses: actions/cache@v2
     with:
