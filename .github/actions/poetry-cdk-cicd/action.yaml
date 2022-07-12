@@ -1,0 +1,85 @@
+name: "run-serverless-ci"
+description: "Runs poetry install and runs the pytest"
+
+inputs:
+  code-artifact-account:
+    required: true
+    default: us-east-1
+  code-artifact-domain:
+    required: true
+    default: dh-artifacts
+  env:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+  aws-account-id:
+    required: true
+  cfn-role:
+    required: true
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v2
+ 
+  - name: date
+    id: date
+    uses: Kaven-Universe/github-action-current-date-time@v1.1.0
+    with:
+      format: "YYYY_MM_DD"
+  - uses: Gr1N/setup-poetry@v7
+  - run:  |
+                export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{code-artifcat-domain}} --domain-owner ${{code-artifcat-account}} --query authorizationToken --output text)
+                poetry config http-basic.dh_pypi aws "${CODEARTIFACT_AUTH_TOKEN}"
+  - uses: actions/cache@v2
+    with:
+      path: |
+         poetry.lock
+         .venv
+      key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
+  - uses: actions/cache@v2
+    with:
+      path: |
+         ~/cache
+      key: depcache
+  - uses: actions/cache@v2
+    with:
+      path: |
+          poetry.lock
+          .venv
+      key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
+  - uses: actions/cache@v2
+    with:
+      path: |
+          ~/cache
+      key: depcache
+  - name: Configure AWS credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      aws-region: ${{ inputs.region }}
+  - shell: bash
+    run: |
+      echo "Performing deployment on region: ${{ inputs.region }}"
+      [[ -z "${{ inputs.region }}" ]] && { echo "inputs.region cannot be empty" ; exit 1; }
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEPLOYMENT REGION: ${{ inputs.region }}"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Bootstrap CDK Toolkit on this environment..."
+      echo
+      echo
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Synthesizing Cloudformation templates..."
+      echo "Running >> cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}"
+      poetry run cdk synth -v --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
+      echo
+      echo
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Listing the stacks that will be deployed"
+      poetry run cdk list -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }}
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      echo
+
+      export LOGLEVEL=DEBUG
+      echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment begins..."
+      poetry run cdk deploy '*' --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }} --require-approval never
