@@ -50,7 +50,7 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - uses: dearhealth/shared-workflows/.github/actions/serverless-ci@main
+      - uses: dearhealth/shared-workflows/.github/actions/serverless-ci@fix-for-cryptography-module-dep
         with:
          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
          code-artifact-domain: dh-artifacts
