@@ -77,10 +77,10 @@ runs:
         poetry run pytest
       shell: bash
 
-    - run: npm install
+    - run: npm install -g serverless@2
       shell: bash
 
-    - run: npm install -g serverless@2
+    - run: npm install
       shell: bash
 
     - run: mkdir dh-packages
