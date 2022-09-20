@@ -38,6 +38,7 @@ runs:
 
     - name: Setup local DynamoDB
       run: docker run -p 8000:8000 amazon/dynamodb-local &
+      shell: bash
 
     - uses: Gr1N/setup-poetry@v7
 
