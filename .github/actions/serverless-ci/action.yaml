@@ -20,6 +20,10 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install AWS CLI
+      id: install-aws-cli
+      uses: unfor19/install-aws-cli-action@master
+      
     - name: checkout
       uses: actions/checkout@v2
 
@@ -29,8 +33,11 @@ runs:
       with:
         format: "YYYY_MM_DD"
 
-    - name: Start DynamoDB in GitHub Actions
-      uses: rrainn/dynamodb-action@v2.0.1
+    # - name: Start DynamoDB in GitHub Actions
+    #   uses: rrainn/dynamodb-action@v2.0.1
+
+    - name: Setup local DynamoDB
+      run: docker run -p 8000:8000 amazon/dynamodb-local &
 
     - uses: Gr1N/setup-poetry@v7
 
