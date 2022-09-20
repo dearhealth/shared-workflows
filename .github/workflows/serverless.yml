@@ -77,7 +77,7 @@ jobs:
            env: dev
            old-env-id: develop
            aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
-fix-for-cryptography-module-dep
+
   deploy-tst:
     permissions:
       id-token: write
