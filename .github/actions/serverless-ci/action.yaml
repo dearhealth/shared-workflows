@@ -77,10 +77,11 @@ runs:
         poetry run pytest
       shell: bash
 
-    - run: npm install -g serverless@2
-      shell: bash
-
-    - run: npm install
+    - name: npm install deps
+      run: |
+        aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region us-east-1 --domain-owner ${{inputs.aws-account-dev}}
+        npm install -g serverless@2
+        npm install
       shell: bash
 
     - run: mkdir dh-packages
