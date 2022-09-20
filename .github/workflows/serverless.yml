@@ -70,6 +70,11 @@ jobs:
     environment: 'dev'
     needs: ci
     steps:
+      - name: Install pre-req tools & AWS CLI
+        id: install-aws-cli
+        run: |
+          yum install -y tar unzip gzip sudo
+
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
