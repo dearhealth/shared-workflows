@@ -22,7 +22,7 @@ runs:
   steps:
 
     - run: |
-        yum install -y tar unzip
+        yum install -y tar unzip gzip
       shell: bash
 
     - name: checkout
