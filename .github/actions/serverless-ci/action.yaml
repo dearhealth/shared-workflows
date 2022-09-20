@@ -20,6 +20,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - run: |
+        yum install -y tar unzip
+      shell: bash
+
     - name: checkout
       uses: actions/checkout@v2
 
