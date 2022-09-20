@@ -72,7 +72,7 @@ runs:
     - name: Run tests
       run: |
         if test -f "pytest.ini"; then
-          sed '/    LOCAL_DYNAMODB_ENDPOINT/s/=.*$/=http:\/\/dynamodb:8000/' pytest.ini
+          sed -i '/    LOCAL_DYNAMODB_ENDPOINT/s/=.*$/=http:\/\/dynamodb:8000/' pytest.ini
         fi
         poetry run pytest
       shell: bash
