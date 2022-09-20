@@ -25,7 +25,7 @@ runs:
       key: depcache
   - uses: actions/setup-python@v1
     with:
-        python-version: 3.9
+        python-version: 3.8
   - run: poetry install
     shell: bash
   

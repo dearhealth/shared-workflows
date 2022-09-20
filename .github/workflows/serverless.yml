@@ -26,7 +26,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     strategy:
       fail-fast: false
     services:
@@ -66,7 +66,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'dev'
     needs: ci
     steps:
@@ -84,7 +84,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'tst'
     needs: deploy-dev
     steps:
@@ -102,7 +102,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'acc-eu'
     needs: deploy-tst
     steps:
@@ -120,7 +120,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'acc-us'
     needs: deploy-tst
     steps:
@@ -138,7 +138,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'prd-eu'
     needs: deploy-acc-eu
     steps:
@@ -156,7 +156,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.9
+      image: docker://amazon/aws-lambda-python:3.8
     environment: 'prd-us'
     needs: deploy-acc-us
     steps:
