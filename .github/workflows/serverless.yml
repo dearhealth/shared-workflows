@@ -91,7 +91,9 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
+    container:
+      image: docker://amazon/aws-lambda-python:3.9
     environment: 'acc-us'
     needs: deploy-tst
     steps:
