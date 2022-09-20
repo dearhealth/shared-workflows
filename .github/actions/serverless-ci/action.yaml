@@ -68,11 +68,11 @@ runs:
 
     - name: Configure python aliases & poetry
       run: |
-        echo "alias python3.8=python" > ~/.bashrc
         poetry install
         poetry env info
-        python --version
-        cat serverless.yml
+        python -m pip help install
+        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        python3.8 -m pip help install
       shell: bash
 
     - name: Run tests
