@@ -62,17 +62,10 @@ runs:
         node-version: '16'    
         cache: 'npm'
 
-    - uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-
-    - name: Configure python aliases & poetry
+    - name: poetry
       run: |
         poetry install
         poetry env info
-        python -m pip help install
-        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        python3.8 -m pip help install
       shell: bash
 
     - name: Run tests
