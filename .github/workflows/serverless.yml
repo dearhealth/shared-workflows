@@ -31,20 +31,16 @@ jobs:
       fail-fast: false
     steps:
 
-      - run: |
-          yum install -y tar unzip gzip sudo
-        shell: bash
-
-      - name: Install AWS CLI
+      - name: Install pre-req tools & AWS CLI
         id: install-aws-cli
         run: |
+          yum install -y tar unzip gzip sudo
+
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install
-        shell: bash
-        
-      - name: Remove sudo
-        run: yum remove sudo -y
+
+          yum remove sudo -y
         shell: bash
 
       - uses: actions/checkout@v2
