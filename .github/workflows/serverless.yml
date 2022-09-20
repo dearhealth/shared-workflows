@@ -37,18 +37,16 @@ jobs:
 
       - name: Install AWS CLI
         id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@master
-        # run: |
-        #   curl -L -o install-aws.sh https://raw.githubusercontent.com/unfor19/install-aws-cli-action/master/entrypoint.sh && \
-        #   chmod +x install-aws.sh
-        #   ./install-aws.sh "v2" "amd64"
-        #   rm install-aws.sh  
-        # shell: bash
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+        shell: bash
         
       - name: Remove sudo
         run: yum remove sudo -y
         shell: bash
-        
+
       - uses: actions/checkout@v2
 
       - uses: dearhealth/shared-workflows/.github/actions/serverless-ci@main
