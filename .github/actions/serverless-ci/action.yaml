@@ -29,7 +29,7 @@ runs:
       with:
         format: "YYYY_MM_DD"
 
-    - uses: rrainn/dynamodb-action@v2.0.1
+    # - uses: rrainn/dynamodb-action@v2.0.1
 
     - uses: Gr1N/setup-poetry@v7
 
@@ -70,7 +70,11 @@ runs:
       shell: bash
 
     - name: Run tests
-      run: poetry run pytest
+      run: |
+        if test -f "pytest.ini"; then
+          sed '/    LOCAL_DYNAMODB_ENDPOINT/s/=.*$/=http:\/\/dynamodb:8000/' pytest.ini
+        fi
+        poetry run pytest
       shell: bash
 
     - run: npm install

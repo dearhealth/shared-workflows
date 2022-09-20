@@ -29,6 +29,11 @@ jobs:
       image: docker://amazon/aws-lambda-python:3.8
     strategy:
       fail-fast: false
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - 8000:8000
     steps:
 
       - name: Install pre-req tools & AWS CLI
