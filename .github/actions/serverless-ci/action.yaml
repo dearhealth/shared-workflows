@@ -72,6 +72,7 @@ runs:
         poetry install
         poetry env info
         python --version
+        cat serverless.yml
       shell: bash
 
     - name: Run tests
