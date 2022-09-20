@@ -71,32 +71,26 @@ runs:
     - run: mkdir dh-packages
       shell: bash
     - run: |
-        sls requirements cleanCache --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --old-env-id develop --package dh-packages/dev-us-east-1-build
         sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --old-env-id develop --package dh-packages/dev-us-east-1-build
         du -sh dh-packages/dev-us-east-1-build
       shell: bash
     - run: |
-        sls requirements cleanCache --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-tst}} --aws-target-account-id ${{inputs.aws-account-tst}} --old-env-id test --package dh-packages/tst-us-east-1-build
         sls package --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-tst}} --aws-target-account-id ${{inputs.aws-account-tst}} --old-env-id test --package dh-packages/tst-us-east-1-build
         du -sh dh-packages/tst-us-east-1-build
       shell: bash
     - run: |
-        sls requirements cleanCache --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-us-east-1-build
         sls package --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-us-east-1-build
         du -sh dh-packages/acc-us-east-1-build
       shell: bash
     - run: |
-        sls requirements cleanCache --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-us-east-1-build 
         sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-us-east-1-build 
         du -sh dh-packages/prd-us-east-1-build
       shell: bash
     - run: |
-        sls requirements cleanCache --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-eu-west-1-build
         sls package --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-eu-west-1-build
         du -sh dh-packages/acc-eu-west-1-build
       shell: bash
     - run: |
-        sls requirements cleanCache --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-eu-west-1-build
         sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-eu-west-1-build
         du -sh dh-packages/prd-eu-west-1-build
       shell: bash
@@ -111,8 +105,3 @@ runs:
       with:
         name: packages-artifact
         path: packages.tar
-
-
-    
-
-

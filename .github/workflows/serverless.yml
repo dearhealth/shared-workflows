@@ -25,6 +25,8 @@ jobs:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
+    container:
+      image: docker://amazon/aws-lambda-python:3.9
     strategy:
       fail-fast: false
     steps:
