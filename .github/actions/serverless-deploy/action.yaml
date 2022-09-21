@@ -17,9 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install pre-req tools
-      run: yum install -y tar unzip gzip
-      shell: bash
 
     - name: checkout
       uses: actions/checkout@v2
