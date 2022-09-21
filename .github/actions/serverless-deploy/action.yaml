@@ -18,7 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: Install pre-req tools
-      run: yum install -y tar unzip gzip git
+      run: yum install -y tar unzip gzip
       shell: bash
 
     - name: checkout
@@ -32,6 +32,8 @@ runs:
     
     - name: Download a single artifact
       uses: actions/download-artifact@v2
+      with:
+        name: packages-artifact
 
     - run: tar xvf packages.tar
       shell: bash
