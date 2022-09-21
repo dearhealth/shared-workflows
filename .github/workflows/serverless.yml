@@ -25,10 +25,31 @@ jobs:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
+    container:
+      image: docker://amazon/aws-lambda-python:3.8
     strategy:
       fail-fast: false
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - 8000:8000
     steps:
+
+      - name: Install pre-req tools & AWS CLI
+        id: install-aws-cli
+        run: |
+          yum install -y tar unzip gzip sudo
+
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+          yum remove sudo -y
+        shell: bash
+
       - uses: actions/checkout@v2
+
       - uses: dearhealth/shared-workflows/.github/actions/serverless-ci@main
         with:
          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
@@ -43,7 +64,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'dev'
     needs: ci
     steps:
@@ -54,12 +75,13 @@ jobs:
            env: dev
            old-env-id: develop
            aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-tst:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'tst'
     needs: deploy-dev
     steps:
@@ -70,12 +92,13 @@ jobs:
            env: tst
            old-env-id: test
            aws-account-id: ${{ secrets.AWS_ACCOUNT_TST }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-acc-eu:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'acc-eu'
     needs: deploy-tst
     steps:
@@ -86,12 +109,13 @@ jobs:
            env: acc
            old-env-id: acceptance
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-acc-us:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'acc-us'
     needs: deploy-tst
     steps:
@@ -102,12 +126,13 @@ jobs:
            env: acc
            old-env-id: acceptance
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
  
   deploy-prd-eu:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'prd-eu'
     needs: deploy-acc-eu
     steps:
@@ -118,12 +143,13 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-prd-us:
     permissions:
       id-token: write
       contents: read
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     environment: 'prd-us'
     needs: deploy-acc-us
     steps:
@@ -134,3 +160,4 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}

@@ -28,8 +28,9 @@ runs:
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
       with:
         format: "YYYY_MM_DD"
-    - name: Start DynamoDB in GitHub Actions
-      uses: rrainn/dynamodb-action@v2.0.1
+
+    # - uses: rrainn/dynamodb-action@v2.0.1
+
     - uses: Gr1N/setup-poetry@v7
 
     - name: Configure AWS credentials from Test account
@@ -37,59 +38,79 @@ runs:
       with:
         role-to-assume: ${{inputs.role-to-assume}}
         aws-region: us-east-1
+
     - run: |
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
         poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
       shell: bash
+
     - uses: actions/cache@v2
       with:
         path: |
           .venv
 #           poetry.lock
         key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
+
     - uses: actions/cache@v2
       with:
         path: |
           ~/cache
         key: depcache
+
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'    
+        node-version: '16'    
         cache: 'npm'
-    - uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - run: poetry install
+
+    - name: poetry
+      run: |
+        poetry install
+        poetry env info
       shell: bash
+
     - name: Run tests
-      run: poetry run pytest
+      run: |
+        if test -f "pytest.ini"; then
+          sed -i '/    LOCAL_DYNAMODB_ENDPOINT/s/=.*$/=http:\/\/dynamodb:8000/' pytest.ini
+        fi
+        poetry run pytest
       shell: bash
-    - run: npm install
+
+    - name: npm install deps
+      run: |
+        aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region us-east-1 --domain-owner ${{inputs.aws-account-dev}}
+        npm install -g serverless@2
+        npm install
       shell: bash
-    - run: npm install -g serverless@2
-      shell: bash
+
     - run: mkdir dh-packages
       shell: bash
+
     - run: |
         sls package --stage dev --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-dev}} --aws-target-account-id ${{inputs.aws-account-dev}} --old-env-id develop --package dh-packages/dev-us-east-1-build
         du -sh dh-packages/dev-us-east-1-build
       shell: bash
+
     - run: |
         sls package --stage tst --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-tst}} --aws-target-account-id ${{inputs.aws-account-tst}} --old-env-id test --package dh-packages/tst-us-east-1-build
         du -sh dh-packages/tst-us-east-1-build
       shell: bash
+
     - run: |
         sls package --stage acc --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-us-east-1-build
         du -sh dh-packages/acc-us-east-1-build
       shell: bash
+
     - run: |
         sls package --stage prd --region us-east-1 --deploymentBucketName dh-deployment-bucket-us-east-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-us-east-1-build 
         du -sh dh-packages/prd-us-east-1-build
       shell: bash
+
     - run: |
         sls package --stage acc --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-acc}} --aws-target-account-id ${{inputs.aws-account-acc}} --old-env-id acceptance --package dh-packages/acc-eu-west-1-build
         du -sh dh-packages/acc-eu-west-1-build
       shell: bash
+
     - run: |
         sls package --stage prd --region eu-west-1 --deploymentBucketName dh-deployment-bucket-eu-west-1-${{inputs.aws-account-prd}} --aws-target-account-id ${{inputs.aws-account-prd}} --old-env-id production --package dh-packages/prd-eu-west-1-build
         du -sh dh-packages/prd-eu-west-1-build
@@ -105,8 +126,3 @@ runs:
       with:
         name: packages-artifact
         path: packages.tar
-
-
-    
-
-

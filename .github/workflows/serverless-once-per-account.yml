@@ -44,6 +44,7 @@ jobs:
            env: dev
            old-env-id: develop
            aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-prd-eu:
     permissions:
@@ -60,6 +61,7 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-prd-us:
     permissions:
@@ -76,3 +78,4 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
