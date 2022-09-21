@@ -40,10 +40,11 @@ runs:
         node-version: '16'
         cache: 'npm'
 
-    - run: npm install -g serverless@2
-      shell: bash
-
-    - run: npm install
+    - name: npm install deps
+      run: |
+        aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region us-east-1 --domain-owner ${{inputs.aws-account-dev}}
+        npm install -g serverless@2
+        npm install
       shell: bash
 
     - run: sls deploy --stage ${{inputs.env}} --region ${{inputs.region}} --deploymentBucketName dh-deployment-bucket-${{inputs.region}}-${{inputs.aws-account-id}} --aws-target-account-id ${{inputs.aws-account-id}} --old-env-id ${{inputs.old-env-id}} --package dh-packages/${{inputs.env}}-${{inputs.region}}-build
