@@ -75,6 +75,7 @@ jobs:
            env: dev
            old-env-id: develop
            aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-tst:
     permissions:
@@ -91,6 +92,7 @@ jobs:
            env: tst
            old-env-id: test
            aws-account-id: ${{ secrets.AWS_ACCOUNT_TST }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-acc-eu:
     permissions:
@@ -107,6 +109,7 @@ jobs:
            env: acc
            old-env-id: acceptance
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-acc-us:
     permissions:
@@ -123,6 +126,7 @@ jobs:
            env: acc
            old-env-id: acceptance
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
  
   deploy-prd-eu:
     permissions:
@@ -139,6 +143,7 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   deploy-prd-us:
     permissions:
@@ -155,3 +160,4 @@ jobs:
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
+           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}

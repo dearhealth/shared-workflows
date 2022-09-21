@@ -13,6 +13,8 @@ inputs:
     description: "Runs poetry install and runs the pytest"
   aws-account-id:
     required: true
+  dh-artifacts-aws-account-id:
+    required: true
 
 runs:
   using: "composite"
@@ -42,7 +44,7 @@ runs:
 
     - name: npm install deps
       run: |
-        aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region us-east-1 --domain-owner ${{inputs.aws-account-dev}}
+        aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region us-east-1 --domain-owner ${{inputs.dh-artifacts-aws-account-id}}
         npm install -g serverless@2
         npm install
       shell: bash
