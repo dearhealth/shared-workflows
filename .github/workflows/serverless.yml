@@ -64,6 +64,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'dev'
     needs: ci
     steps:
@@ -79,6 +80,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'tst'
     needs: deploy-dev
     steps:
@@ -94,6 +96,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'acc-eu'
     needs: deploy-tst
     steps:
@@ -109,6 +112,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'acc-us'
     needs: deploy-tst
     steps:
@@ -124,6 +128,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'prd-eu'
     needs: deploy-acc-eu
     steps:
@@ -139,6 +144,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    runs-on: ubuntu-latest
     environment: 'prd-us'
     needs: deploy-acc-us
     steps:
