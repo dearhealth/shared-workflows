@@ -23,17 +23,6 @@ runs:
     - name: checkout
       uses: actions/checkout@v2
 
-    - name: Pre-requesites (setting timezone etc...)
-      run: |
-        apt install -y sudo
-
-        # Set EU timezone
-        sudo mv /etc/localtime /etc/localtime.orig
-        sudo ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
-
-        yum remove sudo -y
-      shell: bash
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
