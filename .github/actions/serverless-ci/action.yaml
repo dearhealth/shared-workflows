@@ -23,6 +23,12 @@ runs:
     - name: checkout
       uses: actions/checkout@v2
 
+    - name: Set Timezone
+      run: |
+        mv /etc/localtime /etc/localtime.orig
+        ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
+      shell: bash
+
     - name: date
       id: date
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
