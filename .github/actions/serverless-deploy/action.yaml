@@ -23,12 +23,10 @@ runs:
     - name: checkout
       uses: actions/checkout@v2
 
-    - name: Set Timezone
-      uses: szenius/set-timezone@v1.0
+    - name: Setup timezone
+      uses: zcong1993/setup-timezone@master
       with:
-        timezoneLinux: "Europe/Amsterdam"
-        timezoneMacos: "Europe/Amsterdam"
-        timezoneWindows: "W. Europe Standard Time"
+        timezone: Europe/Amsterdam
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
