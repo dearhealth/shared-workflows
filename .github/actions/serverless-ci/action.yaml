@@ -23,18 +23,11 @@ runs:
     - name: checkout
       uses: actions/checkout@v2
 
-    - name: Setup timezone
-      uses: zcong1993/setup-timezone@master
-      with:
-        timezone: Europe/Amsterdam
-
     - name: date
       id: date
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
       with:
         format: "YYYY_MM_DD"
-
-    # - uses: rrainn/dynamodb-action@v2.0.1
 
     - uses: Gr1N/setup-poetry@v7
 

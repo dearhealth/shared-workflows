@@ -37,13 +37,17 @@ jobs:
     steps:
 
       - name: Install pre-req tools & AWS CLI
-        id: install-aws-cli
+        id: pre-requesites
         run: |
           yum install -y tar unzip gzip sudo
 
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install
+
+          # Set EU timezone
+          sudo mv /etc/localtime /etc/localtime.orig
+          sudo ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
           yum remove sudo -y
         shell: bash
