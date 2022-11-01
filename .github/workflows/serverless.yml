@@ -35,7 +35,6 @@ jobs:
         ports:
           - 8000:8000
     steps:
-
       - name: Install pre-req tools & AWS CLI
         id: pre-requesites
         run: |
@@ -64,47 +63,13 @@ jobs:
          aws-account-acc: ${{ secrets.AWS_ACCOUNT_ACC }}
          aws-account-prd: ${{ secrets.AWS_ACCOUNT_PRD }}
 
-  deploy-dev:
-    permissions:
-      id-token: write
-      contents: read
-    runs-on: ubuntu-latest
-    environment: 'dev'
-    needs: ci
-    steps:
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
-         with:
-           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
-           region: us-east-1
-           env: dev
-           old-env-id: develop
-           aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
-           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
-
-  deploy-tst:
-    permissions:
-      id-token: write
-      contents: read
-    runs-on: ubuntu-latest
-    environment: 'tst'
-    needs: deploy-dev
-    steps:
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
-         with:
-           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_TST }}
-           region: us-east-1
-           env: tst
-           old-env-id: test
-           aws-account-id: ${{ secrets.AWS_ACCOUNT_TST }}
-           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
-
   deploy-acc-eu:
     permissions:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
     environment: 'acc-eu'
-    needs: deploy-tst
+    # needs: deploy-tst
     steps:
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
          with:
@@ -121,7 +86,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     environment: 'acc-us'
-    needs: deploy-tst
+    # needs: deploy-tst
     steps:
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
          with:
