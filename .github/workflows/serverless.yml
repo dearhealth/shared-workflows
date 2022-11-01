@@ -86,7 +86,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     environment: 'acc-us'
-    # needs: deploy-tst
+    needs: deploy-acc-eu
     steps:
        - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
          with:
