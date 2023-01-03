@@ -26,7 +26,6 @@ runs:
         format: "YYYY_MM_DD"
     - name: Start DynamoDB in GitHub Actions
       uses: rrainn/dynamodb-action@v2.0.1
-    - uses: Gr1N/setup-poetry@v7
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
@@ -55,6 +54,7 @@ runs:
     - uses: actions/setup-python@v1
       with:
         python-version: 3.8
+    - uses: Gr1N/setup-poetry@v7
     - run: poetry install
       shell: bash
     - name: Run tests
