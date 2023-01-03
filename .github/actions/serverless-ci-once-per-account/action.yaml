@@ -32,10 +32,6 @@ runs:
       with:
         role-to-assume: ${{inputs.role-to-assume}}
         aws-region: us-east-1
-    - run: |
-        export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
-        poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
-      shell: bash
     - uses: actions/cache@v2
       with:
         path: |
@@ -55,6 +51,10 @@ runs:
       with:
         python-version: 3.8
     - uses: Gr1N/setup-poetry@v7
+    - run: |
+        export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
+        poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
+      shell: bash
     - run: poetry install
       shell: bash
     - name: Run tests
