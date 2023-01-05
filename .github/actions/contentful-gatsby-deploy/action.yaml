@@ -45,7 +45,7 @@ runs:
   - shell: bash
     run: |
       echo "Starting Cloudormation DATA Stack deployment..."
-      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }}
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} EnyType=${{inputs.portal-type}}
 
   - shell: bash
     run: |
