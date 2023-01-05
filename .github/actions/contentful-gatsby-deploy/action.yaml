@@ -50,6 +50,7 @@ runs:
   - shell: bash
     run: |
       echo "Starting GATSBY build....."
+      npm config set legacy-peer-deps true
       npm install
       
       CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
