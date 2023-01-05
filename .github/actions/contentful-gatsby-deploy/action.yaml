@@ -10,9 +10,9 @@ inputs:
     required: true
   aws-account-id:
     required: true
-  service-name:
+  portal-type:
     required: true
-  myacademy-portal-type:
+  portal-name:
     required: true
   cfn-role:
     required: true
@@ -38,9 +38,9 @@ runs:
   - shell: bash
     run: |
       echo "Setting env vars for Cloudormation DATA Stack deployment"
-      echo "STACK_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-data-stack" >> $GITHUB_ENV
-      echo "WEB_BUCKET_NAME=dh-myacademy-${{ inputs.myacademy-portal-type }}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
-      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.myacademy-portal-type }}-s3-canonical-user-ids" >> $GITHUB_ENV
+      echo "STACK_NAME=${{inputs.portal-name}}-${{ inputs.portal-type }}-data-stack" >> $GITHUB_ENV
+      echo "WEB_BUCKET_NAME=${{inputs.portal-name}}-${{ inputs.portal-type }}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{ inputs.portal-type }}-s3-canonical-user-ids" >> $GITHUB_ENV
 
   - shell: bash
     run: |
