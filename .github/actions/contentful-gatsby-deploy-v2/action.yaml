@@ -39,7 +39,6 @@ runs:
     with:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
-
   - shell: bash
     run: |
       echo "Setting env vars for Cloudormation DATA Stack deployment"
@@ -51,12 +50,6 @@ runs:
     run: |
       echo "Starting Cloudormation DATA Stack deployment..."
       aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}}
-
-  - uses: dearhealth/shared-workflows/.github/actions/npm-add-codeartifact@main
-    with:
-      role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
-      code-artifact-domain: dh-artifacts
-      code-artifact-account: ${{ secrets.AWS_ACCOUNT_DEV }}
 
   - name: Build & Upload to S3
     shell: bash
