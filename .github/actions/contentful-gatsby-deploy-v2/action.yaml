@@ -41,8 +41,11 @@ runs:
       aws-region: ${{inputs.region}}
   - shell: bash
     run: |
-      echo "Setting env vars for Cloudormation DATA Stack deployment"
+      echo "Setting env variables"
       
+      echo "CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }}" >> $GITHUB_ENV
+      echo "CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }}" >> $GITHUB_ENV
+
       echo "ENVIRONMENT=${{inputs.env-name}}" >> $GITHUB_ENV
       echo "STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}-data-stack" >> $GITHUB_ENV
       
@@ -54,8 +57,7 @@ runs:
   - name: Build & Upload to S3
     shell: bash
     run: |
-      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
-      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
+      
 
       echo "Starting GATSBY build....."
       npm config set legacy-peer-deps true
