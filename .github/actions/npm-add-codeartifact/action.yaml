@@ -28,4 +28,4 @@ runs:
         yarn config set npmRegistryServer "${NPM_REGISTRY_SERVER}"
         yarn config set npmRegistries\["${NPM_REGISTRY_SERVER}"\].npmAuthToken" "${CODEARTIFACT_AUTH_TOKEN}" > /dev/null
         yarn config set npmRegistries\["${NPM_REGISTRY_SERVER}"\].npmAlwaysAuth" "true"
-     shell:
+     shell: bash
