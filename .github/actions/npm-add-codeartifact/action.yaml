@@ -21,6 +21,3 @@ runs:
         aws-region: us-east-1
    - run: aws codeartifact login --region us-east-1  --tool npm --repository npm-store --domain ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}}
      shell: bash
-   - run: npm config set always-auth=true
-     shell: bash
-   
