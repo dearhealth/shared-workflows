@@ -22,9 +22,10 @@ runs:
    - run: aws codeartifact login --region us-east-1  --tool npm --repository npm-store --domain ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}}
      shell: bash
    - run: |
+        set -xv
         NPM_REGISTRY_SERVER=$(aws codeartifact get-repository-endpoint --domain ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --repository npm-store --format npm --query repositoryEndpoint --output text)
         CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
         yarn config set npmRegistryServer "${NPM_REGISTRY_SERVER}"
         yarn config set npmRegistries\["${NPM_REGISTRY_SERVER}"\].npmAuthToken" "${CODEARTIFACT_AUTH_TOKEN}" > /dev/null
         yarn config set npmRegistries\["${NPM_REGISTRY_SERVER}"\].npmAlwaysAuth" "true"
-     shell: bash -xv
+     shell:
