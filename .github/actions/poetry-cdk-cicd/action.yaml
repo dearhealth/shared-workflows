@@ -37,7 +37,7 @@ runs:
       aws-region: ${{ inputs.region }}
 
   - name: Setup Poetry
-    uses: Gr1N/setup-poetry@v7
+    uses: Gr1N/setup-poetry@v8
   
   - uses: actions/setup-node@v3
     with:
