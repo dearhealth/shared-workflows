@@ -39,8 +39,11 @@ runs:
       aws-region: ${{inputs.region}}
   - run: aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{inputs.code-artifacts-account-id}} --repository npm-store
     shell: bash
-  - run: npm install
-    shell: bash
+  - name: yarn setup
+    run: |-
+          echo "always-auth=true" >> ~/.npmrc 
+  - name: yarn install
+    run: yarn install
   - run: npm run build:${{ inputs.build-target }}
     shell: bash
   - run: echo "WEB_BUCKET_NAME=dh-${{ inputs.env }}-${{ inputs.service-name }}-${{ inputs.aws-account-id }}-${{ inputs.region }}" >> $GITHUB_ENV
