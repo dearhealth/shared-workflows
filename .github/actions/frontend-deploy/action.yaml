@@ -40,9 +40,9 @@ runs:
   - run: aws codeartifact login --region us-east-1 --tool npm --domain dh-artifacts --domain-owner ${{inputs.code-artifacts-account-id}} --repository npm-store
     shell: bash
   - name: yarn setup
-    run: |-
-          echo "always-auth=true" >> ~/.npmrc 
-  - name: yarn install
+    shell: bash
+    run: echo "always-auth=true" >> ~/.npmrc 
+  - shell: bash
     run: yarn install
   - run: npm run build:${{ inputs.build-target }}
     shell: bash
