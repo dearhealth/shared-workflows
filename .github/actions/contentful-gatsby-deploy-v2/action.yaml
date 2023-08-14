@@ -50,9 +50,6 @@ runs:
       echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/${{inputs.service-name}}-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
       echo "WEB_BUCKET_NAME=${{inputs.portal-name}}-${{inputs.portal-type}}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
 
-      echo "CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }}" >> $GITHUB_ENV
-      echo "CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }}" >> $GITHUB_ENV
-
       echo "ENVIRONMENT=${{inputs.env-name}}" >> $GITHUB_ENV
 
       if ["${{inputs.use-data-stack-suffix-in-stack-name}}" == "true"]; then
@@ -82,7 +79,10 @@ runs:
       npm config set legacy-peer-deps true
       npm install
       
-      npm run s3-clean-build-upload
+      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
+      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
+      npm run build
+
       echo "S3 bucket sync complete..."
       echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
 
