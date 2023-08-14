@@ -22,7 +22,7 @@ inputs:
     required: true
   bucket-name:
     required: true
-  distribution-id-export-name:
+  distribution-id-export-name-suffix:
     required: true
   use-data-stack-suffix-in-stack-name:
     default: true
@@ -85,6 +85,8 @@ runs:
     shell: bash
     run: |
       echo "Invalidating cloudfront edge cache..."
+      # collect all ditribution ids: distribution-id-export-name-suffix
+      
       # export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name }}'].Value" --no-paginate --output text)
       
       # echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
