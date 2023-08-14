@@ -48,6 +48,7 @@ runs:
       echo "AWS_ACCOUNT_ID=${{ inputs.aws-account-id }}" >> $GITHUB_ENV
       
       echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/${{inputs.service-name}}-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
+      echo "WEB_BUCKET_NAME=${{inputs.portal-name}}-${{inputs.portal-type}}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
 
       echo "CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }}" >> $GITHUB_ENV
       echo "CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }}" >> $GITHUB_ENV
@@ -63,13 +64,13 @@ runs:
   - shell: bash
     run: |
       echo "Starting Cloudformation DATA Stack deployment..."
-      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.DATA_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}} S3CanonicalUserIds=${{env.S3_CANONICAL_USER_IDS_SSM_PATH}}
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.DATA_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} EnvType=${{inputs.env-name}} S3CanonicalUserIds=${{env.S3_CANONICAL_USER_IDS_SSM_PATH}}
 
       echo "Cloudformation DATA Stack deployment complete..."
 
       if [[ -f "cf_templates/service.yml" ]]; then
         echo "Starting Cloudformation SERVICE Stack deployment..."
-        # aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{inputs.portal-name}}-${{inputs.env-name}}-service-stack --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}} DataStackName=${{ env.DATA_STACK_NAME }}
+        # aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{inputs.portal-name}}-${{inputs.env-name}}-service-stack --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} EnvType=${{inputs.env-name}} DataStackName=${{ env.DATA_STACK_NAME }}
       fi
 
   - name: Build & Upload to S3
