@@ -57,7 +57,7 @@ runs:
       if ["${{inputs.use-data-stack-suffix-in-stack-name}}" == "true"]; then
         echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}-data-stack" >> $GITHUB_ENV
       else
-        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}" >> $GITHUB_ENV
+        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.portal-type}}" >> $GITHUB_ENV
       fi
       
   - shell: bash
