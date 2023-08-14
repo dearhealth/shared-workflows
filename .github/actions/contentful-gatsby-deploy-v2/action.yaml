@@ -24,6 +24,8 @@ inputs:
     required: true
   distribution-id-export-name:
     required: true
+  use-data-stack-suffix-in-stack-name:
+    default: true
 
 runs:
   using: "composite"
@@ -47,12 +49,24 @@ runs:
       echo "CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }}" >> $GITHUB_ENV
 
       echo "ENVIRONMENT=${{inputs.env-name}}" >> $GITHUB_ENV
-      echo "STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}-data-stack" >> $GITHUB_ENV
+
+      if ["${{inputs.use-data-stack-suffix-in-stack-name}}" == "true"]; then
+        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}-data-stack" >> $GITHUB_ENV
+      else
+        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}" >> $GITHUB_ENV
+      fi
       
   - shell: bash
     run: |
-      echo "Starting Cloudormation DATA Stack deployment..."
-      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}}
+      echo "Starting Cloudformation DATA Stack deployment..."
+      # aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.DATA_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}}
+
+      echo "Cloudformation DATA Stack deployment complete..."
+
+      if [[ -f "cf_templates/service.yml" ]]; then
+        echo "Starting Cloudformation SERVICE Stack deployment..."
+        # aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{inputs.portal-name}}-${{inputs.env-name}}-service-stack --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.bucket-name }} EnvType=${{inputs.env-name}} DataStackName=${{ env.DATA_STACK_NAME }}
+      fi
 
   - name: Build & Upload to S3
     shell: bash
@@ -70,11 +84,11 @@ runs:
   - name: Invalidating cloudfront edge cache
     shell: bash
     run: |
-      export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name }}'].Value" --no-paginate --output text)
+      echo "Invalidating cloudfront edge cache..."
+      # export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name }}'].Value" --no-paginate --output text)
       
-      echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
+      # echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
 
-      aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+      # aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
 
-      echo "Invalidation complete..."
-
+      # echo "Invalidation complete..."
