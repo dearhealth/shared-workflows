@@ -83,6 +83,7 @@ runs:
       CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
       npm run build
 
+      aws s3 sync public s3://${{ env.WEB_BUCKET_NAME }}
       echo "S3 bucket sync complete..."
       echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
 
