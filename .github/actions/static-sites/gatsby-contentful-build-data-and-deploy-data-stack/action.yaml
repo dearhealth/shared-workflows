@@ -1,4 +1,4 @@
-name: "gatsyby-contentful-build-data-stack-deploy"
+name: "gatsyby-contentful-build-and-deploy-stacks"
 description: "Extracts content from Contentful and creates a gatsby Website out of it and uploads it to S3 bucket"
 
 inputs:
@@ -10,6 +10,8 @@ inputs:
     required: true
   data-stack-name:
     required: true
+  env-specific-service-stack-suffix:
+    required: false
   cfn-role:
     required: true
   contentful-space-id:
@@ -39,12 +41,14 @@ runs:
       echo "Setting env vars for Cloudormation DATA Stack deployment"
       echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
 
-  - shell: bash
+  - name: "Deploy Cloudformation DATA Stack"
+    shell: bash
     run: |
       echo "Starting Cloudormation DATA Stack deployment..."
       aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ inputs.data-stack-name }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.s3-bucket-name }}
 
-  - shell: bash
+  - name: "Build & Upload Gatsby site to S3 bucket"
+    shell: bash
     run: |
       echo "Starting GATSBY build....."
       npm config set legacy-peer-deps true

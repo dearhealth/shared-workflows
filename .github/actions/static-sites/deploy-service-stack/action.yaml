@@ -1,0 +1,41 @@
+name: "deploy-service-stack"
+description: "Deploys the service stack on the given environment"
+
+inputs:
+  aws-account-id:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+  service-stack-suffix:
+    required: false
+  cfn-role:
+    required: true
+  distribution-id-export-name:
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+  - name: "Deploy Cloudformation SERVICE Stack (if present)"
+    shell: bash
+    run: |
+      if [ ! -z "${{inputs.service-stack-suffix}}" ]; then
+        echo "SERVICE_STACK_NAME=dh-${{inputs.env}}-${{inputs.service-stack-suffix}}" >> $GITHUB_ENV
+        echo "Starting Cloudormation SERVICE Stack deployment..."
+
+        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{ env.SERVICE_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
+      fi
+  
+  - name: "Clear distribution cache"
+    shell: bash
+    run: |
+      export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name }}'].Value" --no-paginate --output text)
+      
+      # echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
+
+      # aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+
+      # echo "Invalidation complete..."
