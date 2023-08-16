@@ -31,15 +31,12 @@ runs:
     with:
       node-version: '18'    
       cache: 'npm'
+
   - name: Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
       role-to-assume: ${{inputs.role-to-assume}}
       aws-region: ${{inputs.region}}
-  - shell: bash
-    run: |
-      echo "Setting env vars for Cloudormation DATA Stack deployment"
-      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
 
   - name: "Deploy Cloudformation DATA Stack"
     shell: bash
