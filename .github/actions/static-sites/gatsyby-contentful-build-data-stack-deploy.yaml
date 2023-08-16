@@ -1,0 +1,59 @@
+name: "gatsyby-contentful-build-data-stack-deploy"
+description: "Extracts content from Contentful and creates a gatsby Website out of it and uploads it to S3 bucket"
+
+inputs:
+  aws-account-id:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+  data-stack-name:
+    required: true
+  cfn-role:
+    required: true
+  contentful-space-id:
+    required: true
+  contentful-access-token:
+    required: true
+  s3-bucket-name:
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v3
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '18'    
+      cache: 'npm'
+  - name: Configure AWS credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      aws-region: ${{inputs.region}}
+  - shell: bash
+    run: |
+      echo "Setting env vars for Cloudormation DATA Stack deployment"
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/myacademy-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
+
+  - shell: bash
+    run: |
+      echo "Starting Cloudormation DATA Stack deployment..."
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ inputs.data-stack-name }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.s3-bucket-name }}
+
+  - shell: bash
+    run: |
+      echo "Starting GATSBY build....."
+      npm config set legacy-peer-deps true
+      npm install
+      
+      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
+      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
+      npm run build
+
+      aws s3 sync public s3://${{ inputs.s3-bucket-name }}
+      echo "S3 bucket sync complete..."
+      echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
