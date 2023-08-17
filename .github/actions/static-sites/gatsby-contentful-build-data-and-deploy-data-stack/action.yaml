@@ -42,7 +42,7 @@ runs:
 
   - name: "npm install"
     shell: bash
-    run: npm install
+    run: npm install --legacy-peer-deps
 
   - name: Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
