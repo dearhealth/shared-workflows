@@ -10,6 +10,10 @@ inputs:
     required: false
   distribution-id-export-name-suffix:
     required: true
+  contentful-space-id:
+    required: true
+  contentful-access-token:
+    required: true
 
 runs:
   using: "composite"
@@ -27,8 +31,8 @@ runs:
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
       data-stack-name: ${{ inputs.data-stack-name }}
       s3-bucket-name: ${{ inputs.s3-bucket-name }}
-      contentful-space-id: ${{ secrets.CONTENTFUL_SPACE_ID }}
-      contentful-access-token: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
+      contentful-space-id: ${{ inputs.contentful-space-id }}
+      contentful-access-token: ${{ inputs.contentful-access-token }}
     
   - name: STAGING | DEV ACCOUNT | dev deployment | Deploy Cloudformation SERVICE Stack (if present)
     uses: ./.github/actions/static-sites/deploy-service-stack@main
