@@ -2,6 +2,8 @@ name: "deploy-site-to-staging-dev-account"
 description: "Deploys the static site to Staging (on dev account)"
 
 inputs:
+  site-name:
+    required: true
   s3-bucket-name:
     required: true
   data-stack-name:
@@ -20,8 +22,10 @@ runs:
   steps:
 
   - name: STAGING | DEV ACCOUNT | Build & Upload Gatsby site to S3 bucket
-    uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-and-deploy-data-stack@main
     with:
+      site-name: ${{ inputs.site-name }}
+      stage: staging
       code-artifacts-domain: dh-artifacts
       code-artifacts-aws-account-id: 915964404932
       code-artifacts-aws-region: us-east-1
