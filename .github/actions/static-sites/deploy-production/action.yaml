@@ -22,7 +22,7 @@ runs:
   steps:
 
   - name: PRODUCTION | PRD ACCOUNT | Build & Upload Gatsby site to S3 bucket
-    uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-and-deploy-data-stack@main
     with:
       site-name: ${{ inputs.site-name }}
       stage: production
