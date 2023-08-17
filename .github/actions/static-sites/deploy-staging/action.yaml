@@ -14,7 +14,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: [STAGING | DEV ACCOUNT] Configure AWS credentials
+  - name: STAGING  DEV ACCOUNT Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
       role-to-assume: arn:aws:iam::915964404932:role/dh-github-role-Role-Q04O78VX01NM
