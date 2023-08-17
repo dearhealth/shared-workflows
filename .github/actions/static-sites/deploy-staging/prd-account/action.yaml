@@ -14,7 +14,7 @@ runs:
   - name: STAGING | PRD ACCOUNT | Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
-      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-Q04O78VX01NM
+      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-987BLSFWAVPU
       aws-region: us-east-1
 
   - name: STAGING | PRD ACCOUNT | acc | us-east-1 deployment | Deploy Cloudformation SERVICE Stack (if present)

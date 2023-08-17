@@ -26,7 +26,7 @@ runs:
       code-artifacts-aws-account-id: 915964404932
       code-artifacts-aws-region: us-east-1
       region: eu-west-1
-      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-Q04O78VX01NM
+      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-987BLSFWAVPU
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
       data-stack-name: ${{ inputs.data-stack-name }}
       s3-bucket-name: ${{ inputs.s3-bucket-name }}
@@ -36,7 +36,7 @@ runs:
   - name: PRODUCTION | PRD ACCOUNT | Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
     with:
-      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-Q04O78VX01NM
+      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-987BLSFWAVPU
       aws-region: us-east-1
       role-session-name: prd-deployment
 
