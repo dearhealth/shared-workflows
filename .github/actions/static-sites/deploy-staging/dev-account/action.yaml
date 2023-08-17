@@ -1,5 +1,5 @@
-name: "deploy-site-to-staging"
-description: "Deploys the static site to Staging"
+name: "deploy-site-to-staging-dev-account"
+description: "Deploys the static site to Staging (on dev account)"
 
 inputs:
   s3-bucket-name:
@@ -55,28 +55,4 @@ runs:
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: tst
-      distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
-
-  - name: STAGING | PRD ACCOUNT | Configure AWS credentials
-    uses: aws-actions/configure-aws-credentials@v1
-    with:
-      role-to-assume: arn:aws:iam::580448008933:role/dh-github-role-Role-Q04O78VX01NM
-      aws-region: us-east-1
-
-  - name: STAGING | PRD ACCOUNT | acc | us-east-1 deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
-    with:
-      region: us-east-1
-      cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
-      service-stack-suffix: ${{ inputs.service-stack-suffix }}
-      env: acc
-      distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
-
-  - name: STAGING | PRD ACCOUNT | acc | eu-west-1 deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
-    with:
-      region: eu-west-1
-      cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
-      service-stack-suffix: ${{ inputs.service-stack-suffix }}
-      env: acc
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
