@@ -2,6 +2,10 @@ name: "gatsyby-contentful-build-and-deploy-stacks"
 description: "Extracts content from Contentful and creates a gatsby Website out of it and uploads it to S3 bucket"
 
 inputs:
+  code-artifacts-aws-account-id:
+    required: true
+  code-artifacts-aws-region:
+    required: true
   region:
     required: true
   data-stack-name:
@@ -35,6 +39,7 @@ runs:
   - name: "building gatsby site and uploading to S3 bucket..."
     shell: bash
     run: |
+      aws codeartifact login --tool npm --repository npm-store --domain dh-artifacts --region ${{ inputs.code-artifacts-aws-region }} --domain-owner ${{inputs.code-artifacts-aws-account-id}}
       echo "Starting GATSBY build....."
       npm config set legacy-peer-deps true
       npm install

@@ -27,6 +27,8 @@ runs:
   - name: STAGING | DEV ACCOUNT | Build & Upload Gatsby site to S3 bucket
     uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
     with:
+      code-artifacts-aws-account-id: 915964404932
+      code-artifacts-aws-region: us-east-1
       region: us-east-1
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
       data-stack-name: ${{ inputs.data-stack-name }}
