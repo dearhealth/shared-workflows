@@ -58,6 +58,8 @@ runs:
 
 
   - name: "building gatsby site and uploading to S3 bucket..."
+    shell: bash
+    run: |
       echo "Starting GATSBY build....."
       
       CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
