@@ -24,9 +24,8 @@ runs:
       role-to-assume: arn:aws:iam::915964404932:role/dh-github-role-Role-Q04O78VX01NM
       aws-region: us-east-1
 
-  # - uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
   - name: STAGING | DEV ACCOUNT | Build & Upload Gatsby site to S3 bucket
-    uses: ./.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/gatsby-contentful-build-data-and-deploy-data-stack@main
     with:
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
       data-stack-name: ${{ inputs.data-stack-name }}
@@ -35,7 +34,7 @@ runs:
       contentful-access-token: ${{ inputs.contentful-access-token }}
     
   - name: STAGING | DEV ACCOUNT | dev deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: ./.github/actions/static-sites/deploy-service-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
     with:
       region: us-east-1
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
@@ -44,7 +43,7 @@ runs:
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
 
   - name: STAGING | DEV ACCOUNT | tst deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: ./.github/actions/static-sites/deploy-service-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
     with:
       region: us-east-1
       cfn-role: arn:aws:iam::915964404932:role/dh-cloudformation-role
@@ -59,7 +58,7 @@ runs:
       aws-region: us-east-1
 
   - name: STAGING | PRD ACCOUNT | acc | us-east-1 deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: ./.github/actions/static-sites/deploy-service-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
     with:
       region: us-east-1
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
@@ -68,7 +67,7 @@ runs:
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
 
   - name: STAGING | PRD ACCOUNT | acc | eu-west-1 deployment | Deploy Cloudformation SERVICE Stack (if present)
-    uses: ./.github/actions/static-sites/deploy-service-stack@main
+    uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
     with:
       region: eu-west-1
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
