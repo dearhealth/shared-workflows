@@ -20,9 +20,8 @@ runs:
     shell: bash
     run: |
       if [ ! -z "${{inputs.service-stack-suffix}}" ]; then
-        echo "SERVICE_STACK_NAME=dh-${{inputs.env}}-${{inputs.service-stack-suffix}}" >> $GITHUB_ENV
         echo "Starting Cloudormation SERVICE Stack deployment..."
-        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{ env.SERVICE_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
+        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name dh-${{inputs.env}}-${{inputs.service-stack-suffix}} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
       else:
         echo "No SERVICE stack to deploy..."
       fi
