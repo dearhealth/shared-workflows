@@ -22,7 +22,7 @@ runs:
       if [ ! -z "${{inputs.service-stack-suffix}}" ]; then
         echo "SERVICE_STACK_NAME=dh-${{inputs.env}}-${{inputs.service-stack-suffix}}" >> $GITHUB_ENV
         echo "Starting Cloudormation SERVICE Stack deployment..."
-        # aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{ env.SERVICE_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
+        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{ env.SERVICE_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
       else:
         echo "No SERVICE stack to deploy..."
       fi
@@ -31,9 +31,9 @@ runs:
     shell: bash
     run: |
       if [[ ! -z "${{inputs.service-stack-suffix}}" || ! -z "${{inputs.distribution-id-export-name-suffix}}" ]]; then
-        # export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name-suffix }}'].Value" --no-paginate --output text)
+        export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name-suffix }}'].Value" --no-paginate --output text)
         echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
-        # aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+        aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
         echo "Invalidation complete..."
       else:
         echo "No SERVICE stack to invalidate..."
