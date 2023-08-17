@@ -2,17 +2,9 @@ name: "deploy-site-to-staging-dev-account"
 description: "Deploys the static site to Staging (on dev account)"
 
 inputs:
-  s3-bucket-name:
-    required: true
-  data-stack-name:
-    required: true
   service-stack-suffix:
     required: false
   distribution-id-export-name-suffix:
-    required: true
-  contentful-space-id:
-    required: true
-  contentful-access-token:
     required: true
 
 runs:
