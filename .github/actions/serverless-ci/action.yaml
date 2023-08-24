@@ -29,7 +29,7 @@ runs:
       with:
         format: "YYYY_MM_DD"
 
-    - uses: Gr1N/setup-poetry@v7
+    - uses: Gr1N/setup-poetry@v8
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
@@ -50,18 +50,18 @@ runs:
         echo ">>>>> AFTER"
       shell: bash
 
-#     - uses: actions/cache@v2
-#       with:
-#         path: |
-#           .venv
-# #           poetry.lock
-#         key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
+    - uses: actions/cache@v2
+      with:
+        path: |
+          .venv
+#           poetry.lock
+        key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
 
-#     - uses: actions/cache@v2
-#       with:
-#         path: |
-#           ~/cache
-#         key: depcache
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/cache
+        key: depcache
 
     - uses: actions/setup-node@v2
       with:
