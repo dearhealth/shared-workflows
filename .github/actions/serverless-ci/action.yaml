@@ -39,6 +39,7 @@ runs:
 
     - run: |
         echo ">>>>> BEFORE"
+      shell: bash
 
     - run: |
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
@@ -47,6 +48,7 @@ runs:
 
     - run: |
         echo ">>>>> AFTER"
+      shell: bash
 
 #     - uses: actions/cache@v2
 #       with:
