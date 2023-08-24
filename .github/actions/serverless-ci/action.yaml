@@ -29,7 +29,10 @@ runs:
       with:
         format: "YYYY_MM_DD"
 
-    - uses: Gr1N/setup-poetry@v8
+    # - uses: Gr1N/setup-poetry@v8
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
