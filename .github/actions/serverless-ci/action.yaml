@@ -76,7 +76,7 @@ runs:
         if test -f "pytest.ini"; then
           sed -i '/    LOCAL_DYNAMODB_ENDPOINT/s/=.*$/=http:\/\/dynamodb:8000/' pytest.ini
         fi
-        poetry run pytest
+        poetry run pytest --capture=tee-sys
       shell: bash
 
     - name: npm install deps
