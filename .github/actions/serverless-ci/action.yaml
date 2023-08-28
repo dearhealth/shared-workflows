@@ -31,6 +31,11 @@ runs:
 
     - uses: Gr1N/setup-poetry@v8
 
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.5.1
+
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
