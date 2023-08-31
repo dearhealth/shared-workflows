@@ -56,7 +56,22 @@ runs:
     shell: bash
   - run: aws cloudformation deploy --template-file cloudformation/template.yml --stack-name ${{ env.STACK_NAME }} --region ${{ inputs.region }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides EnvId=${{ inputs.env }} Public=${{ inputs.public }} WebBucketName=${{ env.WEB_BUCKET_NAME }}
     shell: bash
-  - run: aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}"
+  - name: Upload to S3
     shell: bash
-  - run: aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
-    shell: bash
+    run: |
+      # Upload site
+      export site_exclusions_inclusions="--exclude \"*.ttf\" --exclude \"*.eot\" --exclude \"*.woff*\" --exclude \"*.svg\" --exclude \"*.js\" --exclude \"assets*\""
+      aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}" $site_exclusions_inclusions
+
+      # Upload statics
+      export statics_exclusions_inclusions="--exclude \"*\" --include \"*.ttf\" --include \"*.eot\" --include \"*.woff*\" --include \"*.svg\" --include \"*.js\" --include \"assets*\" --cache-control max-age=86400"
+      aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}" $statics_exclusions_inclusions
+
+      # Invalidate cloudfront cache
+      aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
+
+      ## Delete old site contents from the bucket
+      aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}" $site_exclusions_inclusions --delete
+      
+      ## Delete old statics contents from the bucket
+      aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}" $statics_exclusions_inclusions --delete
