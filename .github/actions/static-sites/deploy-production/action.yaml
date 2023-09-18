@@ -14,6 +14,8 @@ inputs:
     required: false
   distribution-id-export-name-suffix:
     required: true
+  distribution-id-export-full-name:
+    required: false
   contentful-space-id:
     required: true
   contentful-access-token:
@@ -55,6 +57,7 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: prd
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
 
   - name: PRODUCTION | PRD ACCOUNT | prd deployment | Deploy Cloudformation SERVICE Stack (if present)
     uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
@@ -64,3 +67,4 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: prd
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
