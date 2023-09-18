@@ -60,7 +60,7 @@ runs:
     shell: bash
     run: |
       echo "Starting Cloudormation DATA Stack deployment..."
-      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ inputs.data-stack-name }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.s3-bucket-name }} S3CanonicalUserIds=/dh/infra/${{ inputs.site-name }}-${{ inputs.stage }}-s3-canonical-user-ids
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ inputs.data-stack-name }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.s3-bucket-name }} S3CanonicalUserIds=/dh/infra/${{ inputs.site-name }}-${{ inputs.stage }}-s3-canonical-user-ids EnvType=${{ inputs.stage }}
 
 
   - name: "building gatsby site and uploading to S3 bucket..."
