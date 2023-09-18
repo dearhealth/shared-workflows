@@ -56,6 +56,7 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: dev
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
 
   - name: STAGING | DEV ACCOUNT | tst deployment | Deploy Cloudformation SERVICE Stack (if present)
     uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
@@ -65,6 +66,7 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: tst
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
 
   - name: STAGING | PRD ACCOUNT | Configure AWS credentials
     uses: aws-actions/configure-aws-credentials@v1
@@ -80,6 +82,7 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: acc
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
 
   - name: STAGING | PRD ACCOUNT | acc | eu-west-1 deployment | Deploy Cloudformation SERVICE Stack (if present)
     uses: dearhealth/shared-workflows/.github/actions/static-sites/deploy-service-stack@main
@@ -89,3 +92,4 @@ runs:
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: acc
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
+      distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
