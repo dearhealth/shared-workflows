@@ -12,6 +12,8 @@ inputs:
     required: false
   distribution-id-export-name-suffix:
     required: false
+  distribution-id-export-full-name:
+    required: false
 
 runs:
   using: "composite"
