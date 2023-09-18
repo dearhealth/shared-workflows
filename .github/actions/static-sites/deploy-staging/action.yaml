@@ -11,7 +11,9 @@ inputs:
   service-stack-suffix:
     required: false
   distribution-id-export-name-suffix:
-    required: true
+    required: false
+  distribution-id-export-full-name:
+    required: false
   contentful-space-id:
     required: true
   contentful-access-token:

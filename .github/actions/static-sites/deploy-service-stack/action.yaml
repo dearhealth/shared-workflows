@@ -31,6 +31,13 @@ runs:
     run: |
       if [ ! -z "${{inputs.distribution-id-export-name-suffix}}" ]; then
         export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.distribution-id-export-name-suffix }}'].Value" --no-paginate --output text)
+      fi
+
+      if [ ! -z "${{inputs.distribution-id-export-full-name}}" ]; then
+        export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-full-name }}'].Value" --no-paginate --output text)
+      fi
+
+      if [ ! -z "$DISTRIBUTION_ID" ]; then
         echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
         aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
         echo "Invalidation complete..."
