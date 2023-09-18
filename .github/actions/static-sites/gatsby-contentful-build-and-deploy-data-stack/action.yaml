@@ -24,6 +24,8 @@ inputs:
     required: true
   s3-bucket-name:
     required: true
+  s3-public-objects:
+    required: false
 
 
 runs:
@@ -70,6 +72,12 @@ runs:
       CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
       npm run build
 
-      aws s3 sync public s3://${{ inputs.s3-bucket-name }}
+      if [ ! -z "${{inputs.s3-public-objects}}" && "${{inputs.s3-public-objects}}" == "true" ]; then
+        aws s3 sync public s3://${{ inputs.s3-bucket-name }} --delete --acl public-read
+        echo "Setting public read access to all objects in S3 bucket..."
+      else
+        aws s3 sync public s3://${{ inputs.s3-bucket-name }} --delete
+      fi
+
       echo "S3 bucket sync complete..."
       echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"

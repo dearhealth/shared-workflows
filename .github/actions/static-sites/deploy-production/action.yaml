@@ -6,6 +6,8 @@ inputs:
     required: true
   s3-bucket-name:
     required: true
+  s3-public-objects:
+    required: false
   data-stack-name:
     required: true
   service-stack-suffix:
@@ -34,6 +36,7 @@ runs:
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
       data-stack-name: ${{ inputs.data-stack-name }}
       s3-bucket-name: ${{ inputs.s3-bucket-name }}
+      s3-public-objects: ${{ inputs.s3-public-objects }}
       contentful-space-id: ${{ inputs.contentful-space-id }}
       contentful-access-token: ${{ inputs.contentful-access-token }}
 
