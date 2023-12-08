@@ -1,0 +1,83 @@
+name: "gatsyby-contentful-build-and-deploy-data-stack"
+description: "Extracts content from Contentful and creates a gatsby Website out of it and uploads it to S3 bucket"
+
+inputs:
+  site-name:
+    required: true
+  stage:
+    required: true
+  role-to-assume:
+    required: true
+  code-artifacts-aws-account-id:
+    required: true
+  code-artifacts-aws-region:
+    required: true
+  region:
+    required: true
+  data-stack-name:
+    required: true
+  cfn-role:
+    required: true
+  contentful-space-id:
+    required: true
+  contentful-access-token:
+    required: true
+  s3-bucket-name:
+    required: true
+  s3-public-objects:
+    required: false
+
+
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v3
+
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '18'    
+      cache: 'npm'
+
+  - name: "login to code artifacts"
+    uses: dearhealth/shared-workflows/.github/actions/npm-add-codeartifact@main
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      code-artifact-account: ${{inputs.code-artifacts-aws-account-id}}
+      code-artifact-domain: ${{inputs.code-artifacts-domain}}
+
+  - name: "npm install"
+    shell: bash
+    run: npm install --legacy-peer-deps
+
+  - name: Configure AWS credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      aws-region: ${{inputs.region}}
+
+  - name: "deployment of data stack..."
+    shell: bash
+    run: |
+      echo "Starting Cloudormation DATA Stack deployment..."
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ inputs.data-stack-name }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ inputs.s3-bucket-name }} S3CanonicalUserIds=/dh/infra/${{ inputs.site-name }}-${{ inputs.stage }}-s3-canonical-user-ids EnvType=${{ inputs.stage }}
+
+
+  - name: "building gatsby site and uploading to S3 bucket..."
+    shell: bash
+    run: |
+      echo "Starting GATSBY build....."
+      
+      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
+      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
+      npm run build
+
+      if [ ! -z "${{inputs.s3-public-objects}}" ]; then
+        aws s3 sync public s3://${{ inputs.s3-bucket-name }} --delete --acl public-read
+        echo "Setting public read access to all objects in S3 bucket..."
+      else
+        aws s3 sync public s3://${{ inputs.s3-bucket-name }} --delete
+      fi
+
+      echo "S3 bucket sync complete..."
+      echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"

@@ -14,7 +14,7 @@ runs:
   - name: checkout
     uses: actions/checkout@v2
  
-  - uses: Gr1N/setup-poetry@v7
+  - uses: Gr1N/setup-poetry@v8
   - run:  |
                 export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{code-artifcat-domain}} --domain-owner ${{code-artifcat-account}} --query authorizationToken --output text)
                 poetry config http-basic.dh_pypi aws "${CODEARTIFACT_AUTH_TOKEN}"

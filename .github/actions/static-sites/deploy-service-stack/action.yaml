@@ -1,0 +1,51 @@
+name: "deploy-service-stack"
+description: "Deploys the service stack on the given environment"
+
+inputs:
+  region:
+    required: true
+  env:
+    required: true
+  cfn-role:
+    required: true
+  service-stack-suffix:
+    required: false
+  distribution-id-export-name-suffix:
+    required: false
+  distribution-id-export-full-name:
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+  - name: "deployment..."
+    shell: bash
+    run: |
+      if [ ! -z "${{inputs.service-stack-suffix}}" ]; then
+        echo "Starting Cloudormation SERVICE Stack deployment..."
+        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name dh-${{inputs.env}}-${{inputs.service-stack-suffix}} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
+      else
+        echo "No SERVICE stack to deploy..."
+      fi
+  
+  - name: "distribution cache clearing..."
+    shell: bash
+    run: |
+      echo "distribution-id-export-name-suffix => ${{inputs.distribution-id-export-name-suffix}}"
+      echo "distribution-id-export-full-name => ${{inputs.distribution-id-export-full-name}}"
+      
+      if [ ! -z "${{inputs.distribution-id-export-name-suffix}}" ]; then
+        export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='dh-${{ inputs.env }}-${{ inputs.distribution-id-export-name-suffix }}'].Value" --no-paginate --output text)
+      fi
+
+      if [ ! -z "${{inputs.distribution-id-export-full-name}}" ]; then
+        export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-full-name }}'].Value" --no-paginate --output text)
+      fi
+
+      if [ ! -z "$DISTRIBUTION_ID" ]; then
+        echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
+        aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+        echo "Invalidation complete..."
+      else
+        echo "No cache distribution id to invalidate..."
+      fi

@@ -1,0 +1,102 @@
+name: "run-contentful-to-gatsby-deployment"
+description: "Extracts content from Contentful and creates a gatsby Website out of it."
+
+inputs:
+  env:
+    required: true
+  region:
+    required: true
+  role-to-assume:
+    required: true
+  aws-account-id:
+    required: true
+  env-name:
+    required: true
+  portal-name:
+    required: true
+  cfn-role:
+    required: true
+  contentful-space-id:
+    required: true
+  contentful-access-token:
+    required: true
+  bucket-name:
+    required: true
+  distribution-id-export-name-suffix:
+    required: true
+  use-data-stack-suffix-in-stack-name:
+    default: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: checkout
+    uses: actions/checkout@v3
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '18'    
+      cache: 'npm'
+  - name: Configure AWS credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      role-to-assume: ${{inputs.role-to-assume}}
+      aws-region: ${{inputs.region}}
+  - shell: bash
+    run: |
+      echo "Setting env variables"
+      
+      echo "AWS_ACCOUNT_ID=${{ inputs.aws-account-id }}" >> $GITHUB_ENV
+      
+      echo "S3_CANONICAL_USER_IDS_SSM_PATH=/dh/infra/${{inputs.service-name}}-${{inputs.portal-type}}-s3-canonical-user-ids" >> $GITHUB_ENV
+      echo "WEB_BUCKET_NAME=${{inputs.portal-name}}-${{inputs.portal-type}}-${{ inputs.aws-account-id }}" >> $GITHUB_ENV
+
+      echo "ENVIRONMENT=${{inputs.env-name}}" >> $GITHUB_ENV
+
+      if ["${{inputs.use-data-stack-suffix-in-stack-name}}" == "true"]; then
+        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.env-name}}-data-stack" >> $GITHUB_ENV
+      else
+        echo "DATA_STACK_NAME=${{inputs.portal-name}}-${{inputs.portal-type}}" >> $GITHUB_ENV
+      fi
+      
+  - shell: bash
+    run: |
+      echo "Starting Cloudformation DATA Stack deployment..."
+      aws cloudformation deploy --template-file cf_templates/data.yml --region ${{ inputs.region }} --stack-name ${{ env.DATA_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} EnvType=${{inputs.env-name}} S3CanonicalUserIds=${{env.S3_CANONICAL_USER_IDS_SSM_PATH}}
+
+      echo "Cloudformation DATA Stack deployment complete..."
+
+      if [[ -f "cf_templates/service.yml" ]]; then
+        echo "Starting Cloudformation SERVICE Stack deployment..."
+        # aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name ${{inputs.portal-name}}-${{inputs.env-name}}-service-stack --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides BucketName=${{ env.WEB_BUCKET_NAME }} EnvType=${{inputs.env-name}} DataStackName=${{ env.DATA_STACK_NAME }}
+      fi
+
+  - name: Build & Upload to S3
+    shell: bash
+    run: |
+      
+
+      echo "Starting GATSBY build....."
+      npm config set legacy-peer-deps true
+      npm install
+      
+      CONTENTFUL_SPACE_ID=${{ inputs.contentful-space-id }} \
+      CONTENTFUL_ACCESS_TOKEN=${{ inputs.contentful-access-token }} \
+      npm run build
+
+      aws s3 sync public s3://${{ env.WEB_BUCKET_NAME }}
+      echo "S3 bucket sync complete..."
+      echo "--------------------- Deployment completed successfully in region ${{ inputs.region }} ---------------------------"
+
+  - name: Invalidating cloudfront edge cache
+    shell: bash
+    run: |
+      echo "Invalidating cloudfront edge cache..."
+      # collect all ditribution ids: distribution-id-export-name-suffix
+
+      # export DISTRIBUTION_ID=$(aws cloudformation list-exports --region ${{ inputs.region }} --query "Exports[?Name=='${{ inputs.distribution-id-export-name }}'].Value" --no-paginate --output text)
+      
+      # echo "Creating invalidation for distribution id => $DISTRIBUTION_ID"
+
+      # aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+
+      # echo "Invalidation complete..."
