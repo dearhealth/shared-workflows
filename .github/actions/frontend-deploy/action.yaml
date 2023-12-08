@@ -60,7 +60,7 @@ runs:
     shell: bash
     run: |
       # Upload site
-      export site_exclusions_inclusions="--exclude \"*.ttf\" --exclude \"*.eot\" --exclude \"*.woff*\" --exclude \"*.svg\" --exclude \"*.js\" --exclude \"assets*\""
+      export site_exclusions_inclusions="--exclude \"*.ttf\" --exclude \"*.eot\" --exclude \"*.woff*\" --exclude \"*.svg\" --exclude \"*.js\" --exclude \"*.js.map\" --exclude \"assets*\""
       aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}" $site_exclusions_inclusions
 
       # Upload statics
@@ -78,6 +78,7 @@ runs:
   - run: aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
     shell: bash    
   - name: Upload Sourcemaps
+      if: ${{ inputs.datadog-site != '' }}
       shell: bash
       env:
         DATADOG_API_KEY: ${{ inputs.datadog-api-key }}
