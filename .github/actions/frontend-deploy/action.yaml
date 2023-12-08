@@ -98,7 +98,7 @@ runs:
         echo "No Datadog API key provided, skipping sourcemaps upload"
         exit 0
       fi
-      datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
+      npx datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
       --service=${{ inputs.service }} \
       --release-version=${{ inputs.release-version }} \
       --minified-path-prefix=${{ inputs.minified-path-prefix }}
