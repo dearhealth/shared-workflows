@@ -95,7 +95,7 @@ runs:
       DATADOG_SITE: ${{ inputs.datadog-site }}
     run: |
       if [ ! -z "${{ inputs.datadog-api-key }}" ]; then
-        npx datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
+        npx datadog-ci sourcemaps upload ${{ inputs.build-output-folder }} \ 
           --service=${{ inputs.service }} \
           --release-version=${{ inputs.release-version }} \
           --minified-path-prefix=${{ inputs.minified-path-prefix }}
