@@ -94,14 +94,15 @@ runs:
       DATADOG_API_KEY: ${{ inputs.datadog-api-key }}
       DATADOG_SITE: ${{ inputs.datadog-site }}
     run: |
-      if [ -z "${{ inputs.datadog-api-key }}" ]; then
+      if [ ! -z "${{ inputs.datadog-api-key }}" ]; then
+        npx datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
+          --service=${{ inputs.service }} \
+          --release-version=${{ inputs.release-version }} \
+          --minified-path-prefix=${{ inputs.minified-path-prefix }}
+      else
         echo "No Datadog API key provided, skipping sourcemaps upload"
-        exit 0
       fi
-      npx datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
-      --service=${{ inputs.service }} \
-      --release-version=${{ inputs.release-version }} \
-      --minified-path-prefix=${{ inputs.minified-path-prefix }}
+      
         
 
   
