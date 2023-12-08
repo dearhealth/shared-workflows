@@ -22,6 +22,17 @@ inputs:
     required: true
   code-artifacts-account-id:
     required: true
+  datadog-api-key:
+    required: false
+  service:
+    required: false
+  release-version:  
+    required: false
+  minified-path-prefix:
+    required: false
+  datadog-site:
+    required: false
+  
   
 runs:
   using: "composite"
