@@ -89,12 +89,15 @@ runs:
   - run: aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
     shell: bash    
   - name: Upload Sourcemaps
-      if: inputs.datadog-site != ''
       shell: bash
       env:
         DATADOG_API_KEY: ${{ inputs.datadog-api-key }}
         DATADOG_SITE: ${{ inputs.datadog-site }}
       run: |
+        if [ -z "${{ inputs.datadog-api-key }}" ]; then
+          echo "No Datadog API key provided, skipping sourcemaps upload"
+          exit 0
+        fi
         datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
         --service=${{ inputs.service }} \
         --release-version=${{ inputs.release-version }} \
