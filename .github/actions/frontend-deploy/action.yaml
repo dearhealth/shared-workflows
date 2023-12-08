@@ -56,4 +56,17 @@ runs:
   - run: aws s3 sync ${{ inputs.build-output-folder }} "s3://${{ env.S3_BUCKET_NAME }}"
     shell: bash
   - run: aws cloudfront create-invalidation --distribution-id ${{ env.DISTRIBUTION_ID }} --paths "/*"
-    shell: bash
+    shell: bash    
+  - name: Upload Sourcemaps
+      shell: bash
+      env:
+        DATADOG_API_KEY: ${{ inputs.datadog-api-key }}
+        DATADOG_SITE: ${{ inputs.datadog-site }}
+      run: |
+        datadog-ci sourcemaps upload ${{ inputs.inputs.build-output-folder }} \ 
+        --service=${{ inputs.service }} \
+        --release-version=${{ inputs.release-version }} \
+        --minified-path-prefix=${{ inputs.minified-path-prefix }}
+        
+
+  
