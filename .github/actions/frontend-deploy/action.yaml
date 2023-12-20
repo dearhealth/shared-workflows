@@ -26,8 +26,6 @@ inputs:
     required: false
   service:
     required: false
-  release-version:  
-    required: false
   minified-path-prefix:
     required: false
   datadog-site:
@@ -39,6 +37,11 @@ runs:
   steps:
   - name: checkout
     uses: actions/checkout@v3
+  - name: get-npm-version
+    id: package-version
+    uses: martinbeentjes/npm-get-version-action@v1.3.1
+    with:
+      path: .
   - uses: actions/setup-node@v3
     with:
       node-version: '16'    
@@ -97,7 +100,7 @@ runs:
       if [ ! -z "${{ inputs.datadog-api-key }}" ]; then
         npx datadog-ci sourcemaps upload ${{ inputs.build-output-folder }} \
           --service=${{ inputs.service }} \
-          --release-version=${{ inputs.release-version }} \
+          --release-version=${{ steps.package-version.outputs.current-version }} \
           --minified-path-prefix=${{ inputs.minified-path-prefix }}
       else
         echo "No Datadog API key provided, skipping sourcemaps upload"
