@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - uses: dearhealth/shared-workflows/.github/actions/serverless-ci-once-per-account@main
         with:
          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_DEV }}
