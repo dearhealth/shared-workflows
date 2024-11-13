@@ -26,7 +26,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazon/aws-lambda-python:3.12
+      image: docker://amazonlinux
     strategy:
       fail-fast: false
     services:
