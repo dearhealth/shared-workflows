@@ -26,7 +26,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: docker://amazonlinux
+      image: docker://amazon/aws-lambda-python:3.12
     strategy:
       fail-fast: false
     services:
@@ -36,28 +36,21 @@ jobs:
           - 8000:8000
     steps:
 
-      - id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@v1
-        with:
-          version: 2                         # default
-          verbose: false                     # default
-          arch: amd64                        # allowed values: amd64, arm64
-          
-      # - name: Install pre-req tools & AWS CLI
-      #   id: pre-requesites
-      #   run: |
-      #     yum install -y tar unzip gzip sudo
+      - name: Install pre-req tools & AWS CLI
+        id: pre-requesites
+        run: |
+          yum install -y tar unzip gzip sudo
 
-      #     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      #     unzip awscliv2.zip
-      #     sudo ./aws/install
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
 
-      #     # Set EU timezone
-      #     sudo mv /etc/localtime /etc/localtime.orig
-      #     sudo ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
+          # Set EU timezone
+          sudo mv /etc/localtime /etc/localtime.orig
+          sudo ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
-      #     yum remove sudo -y
-      #   shell: bash
+          yum remove sudo -y
+        shell: bash
 
       - uses: actions/checkout@v4
 
