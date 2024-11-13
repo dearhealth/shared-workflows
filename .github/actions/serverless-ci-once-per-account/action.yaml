@@ -47,9 +47,9 @@ runs:
       with:
         node-version: '14'    
         cache: 'npm'
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v5
       with:
-        python-version: 3.8
+        python-version: 3.12
     - uses: Gr1N/setup-poetry@v8
     - run: |
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
