@@ -52,7 +52,7 @@ jobs:
           yum remove sudo -y
         shell: bash
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: dearhealth/shared-workflows/.github/actions/serverless-ci@main
         with:
