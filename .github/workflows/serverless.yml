@@ -48,8 +48,6 @@ jobs:
           # Set EU timezone
           sudo mv /etc/localtime /etc/localtime.orig
           sudo ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
-
-          yum remove sudo -y
         shell: bash
 
       - uses: actions/checkout@v4
