@@ -56,6 +56,8 @@ runs:
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: prd
+      web-bucket-region: eu-west-1
+      web-bucket-name: ${{ inputs.s3-bucket-name }}
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
       distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}
 
@@ -66,5 +68,7 @@ runs:
       cfn-role: arn:aws:iam::580448008933:role/dh-cloudformation-role
       service-stack-suffix: ${{ inputs.service-stack-suffix }}
       env: prd
+      web-bucket-region: eu-west-1
+      web-bucket-name: ${{ inputs.s3-bucket-name }}
       distribution-id-export-name-suffix: ${{ inputs.distribution-id-export-name-suffix }}
       distribution-id-export-full-name: ${{ inputs.distribution-id-export-full-name }}

@@ -8,6 +8,10 @@ inputs:
     required: true
   cfn-role:
     required: true
+  web-bucket-name:
+    required: true
+  web-bucket-region:
+    required: true
   service-stack-suffix:
     required: false
   distribution-id-export-name-suffix:
@@ -23,7 +27,7 @@ runs:
     run: |
       if [ ! -z "${{inputs.service-stack-suffix}}" ]; then
         echo "Starting Cloudormation SERVICE Stack deployment..."
-        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name dh-${{inputs.env}}-${{inputs.service-stack-suffix}} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }}
+        aws cloudformation deploy --template-file cf_templates/service.yml --region ${{ inputs.region }} --stack-name dh-${{inputs.env}}-${{inputs.service-stack-suffix}} --capabilities CAPABILITY_NAMED_IAM --role-arn ${{ inputs.cfn-role }} --parameter-overrides EnvId=${{inputs.env}} BucketRegion=${{ inputs.web-bucket-region }} BucketName=${{ inputs.web-bucket-name }}
       else
         echo "No SERVICE stack to deploy..."
       fi
