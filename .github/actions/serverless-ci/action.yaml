@@ -21,7 +21,7 @@ runs:
   using: "composite"
   steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: date
       id: date
@@ -41,13 +41,13 @@ runs:
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
         poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
       shell: bash
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           .venv
 #           poetry.lock
         key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           ~/cache
