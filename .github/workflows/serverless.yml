@@ -115,23 +115,6 @@ jobs:
            aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
            dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
 
-  deploy-acc-us:
-    permissions:
-      id-token: write
-      contents: read
-    runs-on: ubuntu-latest
-    environment: 'acc-us'
-    needs: deploy-tst
-    steps:
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
-         with:
-           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ACC }}
-           region: us-east-1
-           env: acc
-           old-env-id: acceptance
-           aws-account-id: ${{ secrets.AWS_ACCOUNT_ACC }}
-           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
- 
   deploy-prd-eu:
     permissions:
       id-token: write
@@ -144,23 +127,6 @@ jobs:
          with:
            role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
            region: eu-west-1
-           env: prd
-           old-env-id: production
-           aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
-           dh-artifacts-aws-account-id: ${{ secrets.AWS_ACCOUNT_DEV }}
-
-  deploy-prd-us:
-    permissions:
-      id-token: write
-      contents: read
-    runs-on: ubuntu-latest
-    environment: 'prd-us'
-    needs: deploy-acc-us
-    steps:
-       - uses: dearhealth/shared-workflows/.github/actions/serverless-deploy@main
-         with:
-           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_PRD }}
-           region: us-east-1
            env: prd
            old-env-id: production
            aws-account-id: ${{ secrets.AWS_ACCOUNT_PRD }}
