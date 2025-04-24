@@ -58,7 +58,7 @@ runs:
         cache: 'npm'
     - uses: actions/setup-python@v5
       with:
-        python-version: 3.9
+        python-version: 3.11
     - run: poetry install
       shell: bash
     - name: Run tests
