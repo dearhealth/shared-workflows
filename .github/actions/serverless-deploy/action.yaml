@@ -37,7 +37,7 @@ runs:
     - run: tar xvf packages.tar
       shell: bash
 
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v4
       with:
         node-version: '16'
         cache: 'npm'
