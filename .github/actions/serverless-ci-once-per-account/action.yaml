@@ -32,13 +32,13 @@ runs:
       with:
         role-to-assume: ${{inputs.role-to-assume}}
         aws-region: us-east-1
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           .venv
 #           poetry.lock
         key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           ~/cache

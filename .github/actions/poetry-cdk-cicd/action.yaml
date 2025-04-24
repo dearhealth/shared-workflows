@@ -74,23 +74,23 @@ runs:
       echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment begins..."
       poetry run cdk deploy '*' --trace -c ENV_ID="${{ inputs.env }}" -c AWS_ACCOUNT="${{ inputs.aws-account-id }}" -c AWS_REGION="${{ inputs.region }}" --role-arn ${{ inputs.cfn-role }} --require-approval never
 
-  - uses: actions/cache@v2
+  - uses: actions/cache@v4
     with:
       path: |
          poetry.lock
          .venv
       key: ${{ steps.date.outputs.time }}-${{hashFiles('pyproject.toml')}}
-  - uses: actions/cache@v2
+  - uses: actions/cache@v4
     with:
       path: |
          ~/cache
       key: depcache
-  - uses: actions/cache@v2
+  - uses: actions/cache@v4
     with:
       path: |
           node_modules
       key: ${{ steps.date.outputs.time }}-${{hashFiles('package-lock.json')}}
-  - uses: actions/cache@v2
+  - uses: actions/cache@v4
     with:
       path: |
           ~/cache
