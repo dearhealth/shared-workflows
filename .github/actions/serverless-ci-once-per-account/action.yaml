@@ -50,7 +50,10 @@ runs:
     - uses: actions/setup-python@v1
       with:
         python-version: 3.12.11
-    - uses: Gr1N/setup-poetry@v8
+    # - uses: Gr1N/setup-poetry@v8
+    - uses: snok/install-poetry@v1
+      with:
+        version: 2.1.3
     - run: |
         export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain  ${{inputs.code-artifact-domain}} --domain-owner ${{inputs.code-artifact-account}} --query authorizationToken --output text)
         poetry config http-basic.dh_repo aws "${CODEARTIFACT_AUTH_TOKEN}"
