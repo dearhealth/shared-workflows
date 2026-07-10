@@ -47,7 +47,7 @@ runs:
       with:
         node-version: '14'    
         cache: 'npm'
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v5
       with:
         python-version: 3.12.11
     # - uses: Gr1N/setup-poetry@v8
